@@ -88,8 +88,6 @@ class Game extends React.Component {
     }
   }
 
-  // need to fix
-  // set stone to most below row
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
@@ -175,8 +173,6 @@ function isPlaceable(squares, i) {
   }
   return col + 35;
 }
-
-// need to fix
 
 function calculateWinner(squares, index) {
   if (index === 42) {
