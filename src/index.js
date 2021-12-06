@@ -89,14 +89,16 @@ class Game extends React.Component {
   }
 
   // need to fix
+  // set stone to most below row
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    const place = isPlaceable(squares, i);
+    if (calculateWinner(squares) || place === null) {
       return;
     }
-    squares[i] = this.state.xIsNext ? 'X'  : 'O';
+    squares[place] = this.state.xIsNext ? 'X'  : 'O';
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -155,6 +157,24 @@ class Game extends React.Component {
   }
 }
 
+// ========================================
+
+ReactDOM.render(<Game />, document.getElementById('root'));
+
+//  return placeable index number, if stone is full on col return null
+function isPlaceable(squares, i) {
+  const col = i % 7;
+  for (let row = 0; row < 6; row++) {
+    const index = row * 7 + col;
+    if (squares[index] !== null) {
+      if (row === 0)
+      return null;
+      else
+      return index - 7;
+    }
+  }
+  return col + 35;
+}
 
 // need to fix
 function calculateWinner(squares) {
@@ -177,9 +197,3 @@ function calculateWinner(squares) {
   return null;
 }
 
-// ========================================
-
-ReactDOM.render(
-  <Game />,
-  document.getElementById('root')
-);
