@@ -10,7 +10,7 @@ function Square(props) {
   );
 }
 
-class Board extends React.Component {
+class BoardRow extends React.Component {
   renderSquare(i) {
     return (
       <Square 
@@ -22,22 +22,53 @@ class Board extends React.Component {
 
   render() {
     return (
+      <div className="board-row">
+        {this.renderSquare(this.props.index * 7 + 0)}
+        {this.renderSquare(this.props.index * 7 + 1)}
+        {this.renderSquare(this.props.index * 7 + 2)}
+        {this.renderSquare(this.props.index * 7 + 3)}
+        {this.renderSquare(this.props.index * 7 + 4)}
+        {this.renderSquare(this.props.index * 7 + 5)}
+        {this.renderSquare(this.props.index * 7 + 6)}
+      </div>
+    )
+  }
+}
+
+class Board extends React.Component {
+  render() {
+    return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        <BoardRow
+          index={0}
+          squares={this.props.squares}
+          onClick={(i) =>this.props.onClick(i)}
+        />
+        <BoardRow
+          index={1}
+          squares={this.props.squares}
+          onClick={(i) =>this.props.onClick(i)}
+        />
+        <BoardRow
+          index={2}
+          squares={this.props.squares}
+          onClick={(i) =>this.props.onClick(i)}
+        />
+        <BoardRow
+          index={3}
+          squares={this.props.squares}
+          onClick={(i) =>this.props.onClick(i)}
+        />
+        <BoardRow
+          index={4}
+          squares={this.props.squares}
+          onClick={(i) =>this.props.onClick(i)}
+        />
+        <BoardRow
+          index={5}
+          squares={this.props.squares}
+          onClick={(i) =>this.props.onClick(i)}
+        />
       </div>
     );
   }
@@ -49,7 +80,7 @@ class Game extends React.Component {
     this.state = {
       history: [
         {
-        squares: Array(9).fill(null),
+        squares: Array(42).fill(null),
         }
       ],
       stepNumber: 0,
@@ -57,6 +88,7 @@ class Game extends React.Component {
     }
   }
 
+  // need to fix
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
@@ -123,6 +155,8 @@ class Game extends React.Component {
   }
 }
 
+
+// need to fix
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
