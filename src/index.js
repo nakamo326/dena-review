@@ -95,7 +95,7 @@ class Game extends React.Component {
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     const place = isPlaceable(squares, i);
-    if (calculateWinner(squares) || place === null) {
+    if (calculateWinner(squares, 0) || place === null) {
       return;
     }
     squares[place] = this.state.xIsNext ? 'X'  : 'O';
@@ -118,7 +118,7 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const winner = calculateWinner(current.squares, 0);
 
     const moves = history.map((step, move) => {
       const desc = move ?
@@ -177,23 +177,24 @@ function isPlaceable(squares, i) {
 }
 
 // need to fix
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
+
+function calculateWinner(squares, index) {
+  if (index === 42) {
+    return null;
   }
-  return null;
+  if (squares[index] === null)
+    return calculateWinner(squares, index + 1);
+
+  const directionList =[
+    [0,1], [-1,1], [-1,0], [-1,-1], [0,-1], [1,-1], [1,0], [1,1]
+  ];// 右,  右上,     上,     左上,     左,     左下,   下、    右下
+  const row = index / 7;
+  const col = index % 7;
+  for (let i = 0; i < 8; i++) {
+    if ((col === 0 && i >= 3 && i <= 5) || (row === 0 && i >= 1 && i <= 3) 
+      ||(col === 6 && (i <= 1 || i == 7)) || (row === 5 && i >= 6 && i <= 8))
+      continue;
+    
+  }
 }
 
