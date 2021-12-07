@@ -13,7 +13,6 @@ class Stone extends React.Component {
       color = this.props.value === 'X' ? 'stone-color1' : 'stone-color2';
     return (
       <button className={'stone ' + color} onClick={() => {
-        audioPlay("audio/switch.mp3");
         this.props.onClick();
         }}>
       </button>
@@ -85,18 +84,39 @@ class Board extends React.Component {
   }
 }
 
+class Volume extends React.Component {
+  render() {
+    const volume = this.props.volume;
+    if (volume === 1) {
+      return (<i 
+        className="fas fa-volume-up fa-3x"
+        onClick={() => this.props.onClick()}
+        ></i>);
+    } else if (volume === 0.5) {
+      return (<i 
+        className="fas fa-volume-down fa-3x"
+        onClick={() => this.props.onClick()}
+        ></i>);
+    } else {
+      return (<i
+        className="fas fa-volume-off fa-3x"
+        onClick={() => this.props.onClick()}
+        ></i>);
+    }
+  }
+}
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      history: [
-        {
+      history: [{
         squares: Array(42).fill(null),
-        }
-      ],
+      }],
       stepNumber: 0,
       xIsNext: true,
-      isEnter: false
+      isEnter: false,
+      volume: 1
     }
   }
 
@@ -125,6 +145,21 @@ class Game extends React.Component {
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     });
+  }
+
+  toggleVolume() {
+    let newVolume;
+    if (this.state.volume === 1) {
+      newVolume = 0.5;
+    } else if (this.state.volume === 0.5) {
+      newVolume = 0;
+    } else {
+      newVolume = 1;
+    }
+    console.log(newVolume);
+    this.setState({
+      volume: newVolume
+    })
   }
 
   render() {
@@ -171,13 +206,21 @@ class Game extends React.Component {
         <div className="game-info">
           <div>
             <div>{status}</div>
-            <button onClick={() => this.jumpTo(0)}>
+            <button className="enter-button"
+            onClick={() => this.jumpTo(0)}>
             RESET
             </button>
+            <Volume 
+              volume={this.state.volume}
+              onClick={() => {
+                this.toggleVolume();
+                audioPlay("audio/switch.mp3", this.state.volume);
+              }}
+            ></Volume>
           </div>
           <button className="enter-button"
             onClick={() => {
-              audioPlay("audio/bell_sound.mp3");
+              audioPlay("audio/bell_sound.mp3", this.state.volume);
               this.setState({isEnter : true});
             }}> 入場 ☞ </button>
         </div>
@@ -185,7 +228,11 @@ class Game extends React.Component {
           <div className={"game-board" + onGame}>
             <Board 
               squares={current.squares}
-              onClick={(i) => this.handleClick(i)}
+              onClick={(i) => {
+                if (this.state.isEnter)
+                  audioPlay("audio/switch.mp3", this.state.volume);
+                this.handleClick(i);
+              }}
             />
           </div>
         </div>
@@ -243,8 +290,9 @@ function calculateWinner(squares, index) {
   return calculateWinner(squares, index + 1);
 }
 
-function audioPlay (path) {
-  const audio = new Audio(path)
+function audioPlay (path, volume) {
+  const audio = new Audio(path);
+  audio.volume = volume;
   audio.play().then(() => {
     console.log("Audio started!")
   })
