@@ -207,7 +207,9 @@ class Game extends React.Component {
           <div>
             <div>{status}</div>
             <button className="enter-button"
-            onClick={() => this.jumpTo(0)}>
+            onClick={() => {
+              audioPlay("audio/switch.mp3", this.state.volume);
+              this.jumpTo(0);}}>
             RESET
             </button>
             <Volume 
