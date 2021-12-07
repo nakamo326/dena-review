@@ -2,18 +2,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function Square(props) {
-  return (
-    <button className="square" onClick={props.onClick}>
-      {props.value}
-    </button>
-  );
+class Stone extends React.Component {
+  render() {
+    let color;
+    if (this.props.value === null)
+      color = "";
+    else
+      color = this.props.value === 'X' ? 'stone-color1' : 'stone-color2';
+    return (
+      <button className={'stone ' + color} onClick={() => this.props.onClick()}>
+      </button>
+    )
+  }
 }
 
+
 class BoardRow extends React.Component {
-  renderSquare(i) {
+  renderStone(i) {
     return (
-      <Square 
+      <Stone 
         value={this.props.squares[i]} 
         onClick={() => this.props.onClick(i)}
       />
@@ -23,13 +30,13 @@ class BoardRow extends React.Component {
   render() {
     return (
       <div className="board-row">
-        {this.renderSquare(this.props.index * 7 + 0)}
-        {this.renderSquare(this.props.index * 7 + 1)}
-        {this.renderSquare(this.props.index * 7 + 2)}
-        {this.renderSquare(this.props.index * 7 + 3)}
-        {this.renderSquare(this.props.index * 7 + 4)}
-        {this.renderSquare(this.props.index * 7 + 5)}
-        {this.renderSquare(this.props.index * 7 + 6)}
+        {this.renderStone(this.props.index * 7 + 0)}
+        {this.renderStone(this.props.index * 7 + 1)}
+        {this.renderStone(this.props.index * 7 + 2)}
+        {this.renderStone(this.props.index * 7 + 3)}
+        {this.renderStone(this.props.index * 7 + 4)}
+        {this.renderStone(this.props.index * 7 + 5)}
+        {this.renderStone(this.props.index * 7 + 6)}
       </div>
     )
   }
@@ -147,7 +154,7 @@ class Game extends React.Component {
             <span className="neon flash">上<span>上</span></span>
             <span className="neon flash">娯<span>娯</span></span>
             <span className="neon flash">楽<span>楽</span></span>
-            <span className="neon flash">　<span>　</span></span>
+            <span className="neon flash">&nbsp;<span>&nbsp;</span></span>
             <span className="neon flash">四<span>四</span></span>
             <span className="neon flash">子<span>子</span></span>
             <span className="neon flash">棋<span>棋</span></span>

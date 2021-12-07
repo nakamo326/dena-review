@@ -11,6 +11,44 @@ body {
   min-height: 100vh;
 }
 
+.game-body {
+  display: flex;
+  flex-direction: row;
+}
+
+.stone {
+  border: 0.8rem solid #646464;
+  background: #010a01;
+  color: #646464;
+  border-radius: 7rem;
+  float: left;
+  line-height: 7rem;
+  height: 8rem;
+  width: 8rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  padding: 0;
+  text-align: center;
+}
+
+.stone-color1 {
+  border: 0.8rem solid #fff;
+  --neon-border-color: rgb(255, 217, 0);
+  animation: stone-light 1.5s infinite alternate;
+}
+
+.stone-color2 {
+  border: 0.8rem solid #fff;
+  --neon-border-color: rgb(25, 0, 255);
+  animation: stone-light 1.5s infinite alternate;
+}
+
+.stone:focus {
+  outline: none;
+}
+
+
+/* title and enter button style */
 .enter-button {
   margin-left: 60%;
   font-family: 'cwTeXMing', serif;
@@ -21,6 +59,7 @@ body {
   border-radius: 2rem;
   text-align: center;
   width: fit-content;
+  margin-bottom: 3rem;
   border: 0.4rem solid #fff;
   animation: flicker 3.5s infinite alternate;
   --neon-text-color: #ffd52e;
@@ -31,14 +70,6 @@ body {
   text-align: center;
   width: fit-content;
   margin: 3rem auto;
-}
-
-.title-neon {
-  color: #fff;
-  border: 0.4rem solid #fff;
-  animation: flicker 3.5s infinite alternate;
-  --neon-text-color: #f40;
-  --neon-border-color: #08f;
 }
 
 .neon {
@@ -97,5 +128,18 @@ body {
   20%, 24%, 55% {
       text-shadow: none;
       box-shadow: none;
+  }
+}
+
+@keyframes stone-light {
+    
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      box-shadow:
+          0 0 .5rem #fff,
+          inset 0 0 .5rem #fff,
+          0 0 2rem var(--neon-border-color),
+          inset 0 0 2rem var(--neon-border-color),
+          0 0 4rem var(--neon-border-color),
+          inset 0 0 4rem var(--neon-border-color);        
   }
 }
