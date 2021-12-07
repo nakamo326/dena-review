@@ -118,8 +118,10 @@ class Game extends React.Component {
           </div>
           <button className="enter-button"
             onClick={() => {
-              audioPlay("audio/bell_sound.mp3", this.state.volume);
-              this.setState({isEnter : true});
+              if (!this.state.isEnter) {
+                audioPlay("audio/bell_sound.mp3", this.state.volume);
+                this.setState({isEnter : true});
+              }
             }}> 入場 ☞ </button>
         </div>
         <div className="game-body">
