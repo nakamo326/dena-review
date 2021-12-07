@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// TODO: draw check, Board grid, enter function
+// TODO: draw check, Board grid
 
 class Stone extends React.Component {
   render() {
@@ -116,6 +116,7 @@ class Game extends React.Component {
       stepNumber: 0,
       xIsNext: true,
       isEnter: false,
+      isDraw: false,
       volume: 1
     }
   }
@@ -131,6 +132,10 @@ class Game extends React.Component {
       return;
     }
     squares[place] = this.state.xIsNext ? 'X'  : 'O';
+    if (this.state.stepNumber === 41)
+      this.setState({
+        isDraw: true
+      })
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -186,6 +191,8 @@ class Game extends React.Component {
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
+    if (this.state.isDraw)
+      status = 'Draw'
 
     const onGame = this.state.isEnter ? " board-on" : "";
 
@@ -276,20 +283,34 @@ function calculateWinner(squares, index) {
   const col = index % 7;
 
   for (let i = 0; i < 8; i++) {
-    if ((col === 0 && i >= 3 && i <= 5) || (row === 0 && i >= 1 && i <= 3) 
-      ||(col === 6 && (i <= 1 || i === 7)) || (row === 5 && i >= 6 && i <= 8))
-      continue;
     const [a, b, c, d] = [
       (row + dirList[i][0] * 0) * 7 + (col + dirList[i][1] * 0),
       (row + dirList[i][0] * 1) * 7 + (col + dirList[i][1] * 1),
       (row + dirList[i][0] * 2) * 7 + (col + dirList[i][1] * 2),
       (row + dirList[i][0] * 3) * 7 + (col + dirList[i][1] * 3)
     ];
+    if (!checkJump(i, [a, b, c]))
+      continue;
     if (squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
       return squares[a];
     }
   }
   return calculateWinner(squares, index + 1);
+}
+
+function checkJump(dir, array) {
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i];
+    const row = Math.trunc(element / 7);
+    const col = element % 7;
+
+    if ((col === 0 && dir >= 3 && dir <= 5)
+      || (row === 0 && dir >= 1 && dir <= 3)
+      || (col === 6 && (dir <= 1 || dir === 7))
+      || (row === 5 && dir >= 6 && dir <= 8))
+    return false;
+  }
+  return true;
 }
 
 function audioPlay (path, volume) {
