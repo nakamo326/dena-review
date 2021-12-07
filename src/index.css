@@ -19,7 +19,8 @@ body {
 .game-info {
   color: #fff;
   font-size: 2rem;
-  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
 }
 
 .stone {
@@ -68,7 +69,6 @@ body {
 
 /* title and enter button style */
 .enter-button {
-  margin-left: 60%;
   font-family: 'cwTeXMing', serif;
   background: #010a01;
   font-size: 5rem;
@@ -77,6 +77,7 @@ body {
   border-radius: 2rem;
   text-align: center;
   width: fit-content;
+  margin-left: 60%;
   margin-bottom: 3rem;
   border: 0.4rem solid #fff;
   animation: flicker 3.5s infinite alternate;

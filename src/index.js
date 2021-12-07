@@ -100,12 +100,6 @@ class Game extends React.Component {
     }
   }
 
-  setEnter() {
-    this.setState({
-      isEnter : true
-    })
-  }
-
   handleClick(i) {
     if (!this.state.isEnter)
       return;
@@ -138,17 +132,18 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares, 0);
 
-    const moves = history.map((step, move) => {
-      const desc = move ?
-        'Go to move #' + move :
-        'Go to game start';
-      return (
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}
-          </button>
-        </li>
-      );
-    });
+    // use if I want to add history back
+    // const moves = history.map((step, move) => {
+    //   const desc = move ?
+    //     'Go to move #' + move :
+    //     'Go to game start';
+    //   return (
+    //     <li key={move}>
+    //       <button onClick={() => this.jumpTo(move)}>{desc}
+    //       </button>
+    //     </li>
+    //   );
+    // });
 
     let status;
     if (winner) {
@@ -173,12 +168,18 @@ class Game extends React.Component {
             <span className="neon flash">子<span>子</span></span>
             <span className="neon flash">棋<span>棋</span></span>
           </div>
-        <div>
+        <div className="game-info">
+          <div>
+            <div>{status}</div>
+            <button onClick={() => this.jumpTo(0)}>
+            RESET
+            </button>
+          </div>
           <button className="enter-button"
             onClick={() => {
               audioPlay("audio/bell_sound.mp3");
-              this.setEnter();
-              }}> 入場 ☞ </button>
+              this.setState({isEnter : true});
+            }}> 入場 ☞ </button>
         </div>
         <div className="game-body">
           <div className={"game-board" + onGame}>
@@ -186,10 +187,6 @@ class Game extends React.Component {
               squares={current.squares}
               onClick={(i) => this.handleClick(i)}
             />
-          </div>
-          <div className="game-info">
-            <div>{status}</div>
-            <ol>{moves}</ol>
           </div>
         </div>
       </div>
@@ -201,7 +198,7 @@ class Game extends React.Component {
 
 ReactDOM.render(<Game />, document.getElementById('root'));
 
-//  return placeable index number, if stone is full on col return null
+//  return placeable index number, or return null if stone is full on col
 function isPlaceable(squares, i) {
   const col = i % 7;
   for (let row = 0; row < 6; row++) {
