@@ -38,6 +38,10 @@ export function calculateWinner(squares, index) {
     if (!checkJump(i, [a, b, c]))
       continue;
     if (squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
+      console.log(a);
+      console.log(b);
+      console.log(c);
+      console.log(d);
       return squares[a];
     }
   }
