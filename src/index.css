@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/earlyaccess/cwtexming.css);
+@import url('https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap');
 
 :root {
   font-size: 10px;
@@ -10,23 +11,29 @@ body {
   min-height: 100vh;
 }
 
-.game-title {
-  font-family: 'cwTeXMing', serif; 
-  font-size: 7rem;
-  font-weight: 200;
+.enter-button {
+  margin-left: 60%;
+  font-family: 'cwTeXMing', serif;
+  background: #010a01;
+  font-size: 5rem;
+  padding: 1rem 2rem 1rem;
   color: #fff;
-  padding: 1.5rem 3rem 1.5rem;
-  margin-bottom: 3rem;
-  border: 0.4rem solid #fff;
   border-radius: 2rem;
   text-align: center;
   width: fit-content;
+  border: 0.4rem solid #fff;
   animation: flicker 3.5s infinite alternate;
-  --neon-text-color: #f20;
-  --neon-border-color: #08f;
+  --neon-text-color: #ffd52e;
+  --neon-border-color: #ff2e2e;
 }
 
-.game-title-off {
+.game-title {
+  text-align: center;
+  width: fit-content;
+  margin: 3rem auto;
+}
+
+.title-neon {
   color: #fff;
   border: 0.4rem solid #fff;
   animation: flicker 3.5s infinite alternate;
@@ -34,20 +41,36 @@ body {
   --neon-border-color: #08f;
 }
 
-.game-title::-moz-selection {
-  background-color: var(--neon-border-color);
-  color: var(--neon-text-color);
+.neon {
+  font-size: 7rem;
+  font-family: 'Yuji Boku', serif; 
+  position: relative;
+  display: inline-block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #0082ff;
+  text-shadow: 0 0 50px rgba(0,130, 255,.5);
+}
+.neon span {
+  position: absolute;
+  top: 4%;
+  left: 8%;
+  opacity: .3;
 }
 
-.game-title::selection {
-  background-color: var(--neon-border-color);
-  color: var(--neon-text-color);
+.flash {
+  animation: flash-anime 5s linear infinite;
 }
-
-.game-title:focus {
-  outline: none;
+@keyframes flash-anime {
+  0%   {opacity: 1;}
+  50%  {opacity: 1;}
+  51%  {opacity: 0.3;}
+  52%  {opacity: 1;}
+  75% {opacity: 1;}
+  76% {opacity: 0.6;}
+  77% {opacity: 1;}
+  78% {opacity: 0.3;}
+  79% {opacity: 1;}
 }
-
 
 @keyframes flicker {
     

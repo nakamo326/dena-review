@@ -85,6 +85,7 @@ class Game extends React.Component {
       ],
       stepNumber: 0,
       xIsNext: true,
+      IsEnter: false
     }
   }
 
@@ -139,7 +140,21 @@ class Game extends React.Component {
 
     return (
       <div className="game">
-        <div className="game-title"> 電脳盤上娯楽 四子棋 </div>
+          <div className="game-title">
+            <span className="neon flash">電<span>電</span></span>
+            <span className="neon flash">脳<span>脳</span></span>
+            <span className="neon flash">盤<span>盤</span></span>
+            <span className="neon flash">上<span>上</span></span>
+            <span className="neon flash">娯<span>娯</span></span>
+            <span className="neon flash">楽<span>楽</span></span>
+            <span className="neon flash">　<span>　</span></span>
+            <span className="neon flash">四<span>四</span></span>
+            <span className="neon flash">子<span>子</span></span>
+            <span className="neon flash">棋<span>棋</span></span>
+          </div>
+        <div>
+          <button className="enter-button"> 入場 ☞ </button>
+        </div>
         <div className="game-body">
           <div className="game-board">
             <Board 
