@@ -100,22 +100,20 @@ class Game extends React.Component {
             <span className="neon flash">棋<span>棋</span></span>
           </div>
         <div className="game-info">
-          <div>
-            <div>{status}</div>
-            <button className="enter-button"
+          <div>{status}</div>
+          <button className="enter-button"
+          onClick={() => {
+            audioPlay("audio/switch.mp3", this.state.volume);
+            this.jumpTo(0);}}>
+          RESET
+          </button>
+          <Volume
+            volume={this.state.volume}
             onClick={() => {
+              this.toggleVolume();
               audioPlay("audio/switch.mp3", this.state.volume);
-              this.jumpTo(0);}}>
-            RESET
-            </button>
-            <Volume 
-              volume={this.state.volume}
-              onClick={() => {
-                this.toggleVolume();
-                audioPlay("audio/switch.mp3", this.state.volume);
-              }}
-            ></Volume>
-          </div>
+            }}
+          ></Volume>
           <button className="enter-button"
             onClick={() => {
               if (!this.state.isEnter) {

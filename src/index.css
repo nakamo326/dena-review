@@ -1,14 +1,21 @@
 @import url(http://fonts.googleapis.com/earlyaccess/cwtexming.css);
 @import url('https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap');
 
-:root {
-  font-size: 10px;
-}
 
 body {
   margin: 20px;
   background: #010a01;
   min-height: 100vh;
+}
+
+:root {
+  font-size: 10px;
+}
+
+.game-title {
+  text-align: center;
+  width: fit-content;
+  margin: 3rem auto;
 }
 
 .game-body {
@@ -21,7 +28,45 @@ body {
   font-size: 2rem;
   display: flex;
   flex-direction: row;
-  margin: 3rem auto;
+  justify-content: center;
+  margin: 2rem auto;
+}
+
+.volume {
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  margin: 2rem 1rem;
+}
+
+.enter-button {
+  font-family: 'cwTeXMing', serif;
+  background: #010a01;
+  font-size: 4rem;
+  padding: 1rem 2rem 1rem;
+  color: #fff;
+  border-radius: 2rem;
+  text-align: center;
+  width: fit-content;
+  /* margin-left: 40%; */
+  margin-bottom: 3rem;
+  border: 0.4rem solid #fff;
+  animation: flicker 3.5s infinite alternate;
+  --neon-text-color: #ffd52e;
+  --neon-border-color: #ff2e2e;
+}
+
+.game-board {
+  border: 0.4rem solid rgba(67, 226, 88,.2);
+  border-radius: 2rem;
+  padding: 2rem 2rem 3rem;
+  margin: 1rem auto;
+}
+
+.board-on {
+  border: 0.4rem solid #fff;
+  animation: stone-light 3.5s infinite alternate;
+  --neon-border-color: #43e258;
 }
 
 .stone {
@@ -55,42 +100,6 @@ body {
   outline: none;
 }
 
-.game-board {
-  border: 0.4rem solid rgba(67, 226, 88,.5);
-  border-radius: 2rem;
-  padding: 2rem 2rem 3rem;
-}
-
-.board-on {
-  border: 0.4rem solid #fff;
-  animation: stone-light 3.5s infinite alternate;
-  --neon-border-color: #43e258;
-}
-
-
-/* title and enter button style */
-.enter-button {
-  font-family: 'cwTeXMing', serif;
-  background: #010a01;
-  font-size: 5rem;
-  padding: 1rem 2rem 1rem;
-  color: #fff;
-  border-radius: 2rem;
-  text-align: center;
-  width: fit-content;
-  margin-left: 40%;
-  margin-bottom: 3rem;
-  border: 0.4rem solid #fff;
-  animation: flicker 3.5s infinite alternate;
-  --neon-text-color: #ffd52e;
-  --neon-border-color: #ff2e2e;
-}
-
-.game-title {
-  text-align: center;
-  width: fit-content;
-  margin: 3rem auto;
-}
 
 .neon {
   font-size: 7rem;
