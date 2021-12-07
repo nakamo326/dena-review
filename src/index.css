@@ -16,6 +16,12 @@ body {
   flex-direction: row;
 }
 
+.game-info {
+  color: #fff;
+  font-size: 2rem;
+  margin-left: 20px;
+}
+
 .stone {
   border: 0.8rem solid #646464;
   background: #010a01;
@@ -45,6 +51,18 @@ body {
 
 .stone:focus {
   outline: none;
+}
+
+.game-board {
+  border: 0.4rem solid rgba(67, 226, 88,.5);
+  border-radius: 2rem;
+  padding: 2rem 2rem 3rem;
+}
+
+.board-on {
+  border: 0.4rem solid #fff;
+  animation: stone-light 3.5s infinite alternate;
+  --neon-border-color: #43e258;
 }
 
 

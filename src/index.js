@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+// TODO: draw check, Board grid, enter function
+
 class Stone extends React.Component {
   render() {
     let color;
@@ -10,12 +12,14 @@ class Stone extends React.Component {
     else
       color = this.props.value === 'X' ? 'stone-color1' : 'stone-color2';
     return (
-      <button className={'stone ' + color} onClick={() => this.props.onClick()}>
+      <button className={'stone ' + color} onClick={() => {
+        audioPlay("audio/switch.mp3");
+        this.props.onClick();
+        }}>
       </button>
     )
   }
 }
-
 
 class BoardRow extends React.Component {
   renderStone(i) {
@@ -92,11 +96,19 @@ class Game extends React.Component {
       ],
       stepNumber: 0,
       xIsNext: true,
-      IsEnter: false
+      isEnter: false
     }
   }
 
+  setEnter() {
+    this.setState({
+      isEnter : true
+    })
+  }
+
   handleClick(i) {
+    if (!this.state.isEnter)
+      return;
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
@@ -145,6 +157,8 @@ class Game extends React.Component {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
+    const onGame = this.state.isEnter ? " board-on" : "";
+
     return (
       <div className="game">
           <div className="game-title">
@@ -160,10 +174,14 @@ class Game extends React.Component {
             <span className="neon flash">棋<span>棋</span></span>
           </div>
         <div>
-          <button className="enter-button"> 入場 ☞ </button>
+          <button className="enter-button"
+            onClick={() => {
+              audioPlay("audio/bell_sound.mp3");
+              this.setEnter();
+              }}> 入場 ☞ </button>
         </div>
         <div className="game-body">
-          <div className="game-board">
+          <div className={"game-board" + onGame}>
             <Board 
               squares={current.squares}
               onClick={(i) => this.handleClick(i)}
@@ -228,3 +246,10 @@ function calculateWinner(squares, index) {
   return calculateWinner(squares, index + 1);
 }
 
+function audioPlay (path) {
+  const audio = new Audio(path)
+  audio.play().then(() => {
+    console.log("Audio started!")
+  })
+    .catch(error => console.warn(error))
+}
