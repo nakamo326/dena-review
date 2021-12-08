@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/dena-review/static/css/main.3af34a24.chunk.css",
-    "main.js": "/dena-review/static/js/main.9cadcfce.chunk.js",
-    "main.js.map": "/dena-review/static/js/main.9cadcfce.chunk.js.map",
+    "main.css": "/dena-review/static/css/main.b8837443.chunk.css",
+    "main.js": "/dena-review/static/js/main.a52963ce.chunk.js",
+    "main.js.map": "/dena-review/static/js/main.a52963ce.chunk.js.map",
     "runtime-main.js": "/dena-review/static/js/runtime-main.c781481f.js",
     "runtime-main.js.map": "/dena-review/static/js/runtime-main.c781481f.js.map",
     "static/js/2.ef119c92.chunk.js": "/dena-review/static/js/2.ef119c92.chunk.js",
     "static/js/2.ef119c92.chunk.js.map": "/dena-review/static/js/2.ef119c92.chunk.js.map",
     "index.html": "/dena-review/index.html",
-    "static/css/main.3af34a24.chunk.css.map": "/dena-review/static/css/main.3af34a24.chunk.css.map",
+    "static/css/main.b8837443.chunk.css.map": "/dena-review/static/css/main.b8837443.chunk.css.map",
     "static/js/2.ef119c92.chunk.js.LICENSE.txt": "/dena-review/static/js/2.ef119c92.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.c781481f.js",
     "static/js/2.ef119c92.chunk.js",
-    "static/css/main.3af34a24.chunk.css",
-    "static/js/main.9cadcfce.chunk.js"
+    "static/css/main.b8837443.chunk.css",
+    "static/js/main.a52963ce.chunk.js"
   ]
 }
