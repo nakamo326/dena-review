@@ -20,7 +20,7 @@ class Game extends React.Component {
       xIsNext: true,
       isEnter: false,
       isDraw: false,
-      volume: 1
+      volume: 0.5
     }
   }
 
