@@ -1,6 +1,8 @@
 # dena-review
 Four-in-a-row game for public review event
 
+![png](https://github.com/nakamo326/dena-review/blob/main/ss.png)
+
 ## Overview
 This web application is a Four in a row made using react.
 
