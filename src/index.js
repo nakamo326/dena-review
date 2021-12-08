@@ -38,6 +38,16 @@ class Game extends React.Component {
       this.setState({
         isDraw: true
       });
+
+    const winner_streak = calculateWinner(squares, 0);
+    const winner = winner_streak ? squares[winner_streak[0]] : null;
+    if (winner_streak) {
+      for (let i = 0; i < squares.length; i++) {
+        const match = winner_streak.includes(i);
+        squares[i] = match ? winner : null;
+      }
+    }
+
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -74,7 +84,6 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner_streak = calculateWinner(current.squares, 0);
     const winner = winner_streak ? current.squares[winner_streak[0]] : null;
-
     let status;
     if (this.state.isDraw){
       status = 'Draw'
