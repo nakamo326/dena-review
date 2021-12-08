@@ -16,7 +16,7 @@ body {
 .game-title {
   text-align: center;
   width: fit-content;
-  margin: 3rem auto;
+  margin: 2rem auto;
 }
 
 .game-body {
@@ -27,21 +27,10 @@ body {
 .game-info {
   color: #fff;
   font-size: 2rem;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
-}
-
-.volume {
-  width: 10%;
-  display: flex;
-  justify-content: center;
-  margin: 2rem 1rem;
-}
-
-.indicator {
-  padding: 0rem 2rem 0rem;
-  width: 20%;
 }
 
 .reset-button {
@@ -56,7 +45,7 @@ body {
   margin-bottom: 2rem;
   border: 0.2rem solid #fff;
   cursor: pointer;
-  animation: reset-flicker 1.5s infinite alternate;
+  animation: flicker 1.5s infinite alternate;
   --neon-text-color: #ffd52e;
   --neon-border-color: #ff2e2e;
 }
@@ -79,6 +68,18 @@ body {
   --neon-border-color: #2b48cc;
 }
 
+.volume {
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  margin: 2rem 1rem;
+}
+
+.indicator {
+  padding: 0rem 2rem 0rem;
+  width: 20%;
+}
+
 .game-board {
   border: 0.4rem solid rgba(67, 226, 88,.2);
   border-radius: 2rem;
@@ -88,14 +89,13 @@ body {
 
 .board-on {
   border: 0.4rem solid #fff;
-  animation: stone-light 3.5s infinite alternate;
+  animation: light 3.5s infinite alternate;
   --neon-border-color: #43e258;
 }
 
 .stone {
-  border: 0.8rem solid #646464;
+  border: 0.8rem solid #404040;
   background: #010a01;
-  color: #646464;
   border-radius: 7rem;
   float: left;
   height: 8rem;
@@ -108,13 +108,13 @@ body {
 .stone-color1 {
   border: 0.8rem solid #fff;
   --neon-border-color: rgb(255, 217, 0);
-  animation: stone-light 1.5s infinite alternate;
+  animation: light 1.5s infinite alternate;
 }
 
 .stone-color2 {
   border: 0.8rem solid #fff;
   --neon-border-color: rgb(25, 0, 255);
-  animation: stone-light 1.5s infinite alternate;
+  animation: light 1.5s infinite alternate;
 }
 
 .stone:focus {
@@ -153,6 +153,19 @@ body {
   79% {opacity: 1;}
 }
 
+@keyframes light {
+    
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      box-shadow:
+          0 0 .5rem #fff,
+          inset 0 0 .5rem #fff,
+          0 0 2rem var(--neon-border-color),
+          inset 0 0 2rem var(--neon-border-color),
+          0 0 4rem var(--neon-border-color),
+          inset 0 0 4rem var(--neon-border-color);        
+  }
+}
+
 @keyframes flicker {
     
   0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
@@ -176,47 +189,6 @@ body {
   }
   
   20%, 24%, 55% {
-      text-shadow: none;
-      box-shadow: none;
-  }
-}
-
-@keyframes stone-light {
-    
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-      box-shadow:
-          0 0 .5rem #fff,
-          inset 0 0 .5rem #fff,
-          0 0 2rem var(--neon-border-color),
-          inset 0 0 2rem var(--neon-border-color),
-          0 0 4rem var(--neon-border-color),
-          inset 0 0 4rem var(--neon-border-color);        
-  }
-}
-
-@keyframes reset-flicker {
-    
-  0%, 19%, 21%, 23%, 25%, 50%, 52%, 100% {
-    
-      text-shadow:
-          -0.2rem -0.2rem 1rem #fff,
-          0.2rem 0.2rem 1rem #fff,
-          0 0 21rem var(--neon-text-color),
-          0 0 4rem var(--neon-text-color),
-          0 0 6rem var(--neon-text-color),
-          0 0 8rem var(--neon-text-color),
-          0 0 10rem var(--neon-text-color);
-      
-      box-shadow:
-          0 0 .5rem #fff,
-          inset 0 0 .5rem #fff,
-          0 0 2rem var(--neon-border-color),
-          inset 0 0 2rem var(--neon-border-color),
-          0 0 4rem var(--neon-border-color),
-          inset 0 0 4rem var(--neon-border-color);        
-  }
-  
-  20%, 24%, 51% {
       text-shadow: none;
       box-shadow: none;
   }
