@@ -37,14 +37,14 @@ class Game extends React.Component {
     if (this.state.stepNumber === 41)
       this.setState({
         isDraw: true
-      })
+      });
     this.setState({
       history: history.concat([{
         squares: squares,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
-  });
+    });
   }
 
   jumpTo(step) {
@@ -72,16 +72,17 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares, 0);
+    const winner_streak = calculateWinner(current.squares, 0);
+    const winner = winner_streak ? current.squares[winner_streak[0]] : null;
 
     let status;
-    if (winner) {
+    if (this.state.isDraw){
+      status = 'Draw'
+    } else if (winner) {
       status = 'Winner: ' + winner;
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
-    if (this.state.isDraw)
-      status = 'Draw'
 
     const onGame = this.state.isEnter ? " board-on" : "";
 

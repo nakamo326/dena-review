@@ -42,7 +42,7 @@ export function calculateWinner(squares, index) {
       console.log(b);
       console.log(c);
       console.log(d);
-      return squares[a];
+      return [a, b, c, d];
     }
   }
   return calculateWinner(squares, index + 1);
