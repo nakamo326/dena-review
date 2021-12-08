@@ -1,5 +1,6 @@
-@import url(http://fonts.googleapis.com/earlyaccess/cwtexming.css);
+@import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline+Text:wght@800&display=swap');
 
 
 body {
@@ -39,21 +40,39 @@ body {
   margin: 2rem 1rem;
 }
 
-.enter-button {
-  font-family: 'cwTeXMing', serif;
+.reset-button {
+  font-family: 'Big Shoulders Inline Text', cursive;
   background: #010a01;
   font-size: 4rem;
-  padding: 1rem 2rem 1rem;
   color: #fff;
+  padding: 1rem 2rem 1rem;
+  text-align: center;
+  width: fit-content;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  border: 0.2rem solid #fff;
+  cursor: pointer;
+  animation: reset-flicker 1.5s infinite alternate;
+  --neon-text-color: #ffd52e;
+  --neon-border-color: #ff2e2e;
+}
+
+.enter-button {
+  font-family: 'Kosugi Maru', sans-serif;
+  background: #010a01;
+  font-size: 4rem;
+  color: #fff;
+  padding: 1.5rem 2rem 1.5rem;
   border-radius: 2rem;
   text-align: center;
   width: fit-content;
-  /* margin-left: 40%; */
-  margin-bottom: 3rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
   border: 0.4rem solid #fff;
-  animation: flicker 3.5s infinite alternate;
-  --neon-text-color: #ffd52e;
-  --neon-border-color: #ff2e2e;
+  cursor: pointer;
+  animation: flicker 2s infinite alternate;
+  --neon-text-color: #fa2d5a;
+  --neon-border-color: #2b48cc;
 }
 
 .game-board {
@@ -82,6 +101,7 @@ body {
   margin-top: 1rem;
   padding: 0;
   text-align: center;
+  cursor: pointer;
 }
 
 .stone-color1 {
@@ -170,5 +190,33 @@ body {
           inset 0 0 2rem var(--neon-border-color),
           0 0 4rem var(--neon-border-color),
           inset 0 0 4rem var(--neon-border-color);        
+  }
+}
+
+@keyframes reset-flicker {
+    
+  0%, 19%, 21%, 23%, 25%, 50%, 52%, 100% {
+    
+      text-shadow:
+          -0.2rem -0.2rem 1rem #fff,
+          0.2rem 0.2rem 1rem #fff,
+          0 0 21rem var(--neon-text-color),
+          0 0 4rem var(--neon-text-color),
+          0 0 6rem var(--neon-text-color),
+          0 0 8rem var(--neon-text-color),
+          0 0 10rem var(--neon-text-color);
+      
+      box-shadow:
+          0 0 .5rem #fff,
+          inset 0 0 .5rem #fff,
+          0 0 2rem var(--neon-border-color),
+          inset 0 0 2rem var(--neon-border-color),
+          0 0 4rem var(--neon-border-color),
+          inset 0 0 4rem var(--neon-border-color);        
+  }
+  
+  20%, 24%, 51% {
+      text-shadow: none;
+      box-shadow: none;
   }
 }

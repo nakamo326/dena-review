@@ -6,7 +6,7 @@ import Board from './components/board';
 import Volume from './components/volume';
 import {isPlaceable, calculateWinner, audioPlay} from './components/utils.js';
 
-// TODO: draw check, Board grid
+// TODO: Board grid
 
 class Game extends React.Component {
   constructor(props) {
@@ -111,7 +111,7 @@ class Game extends React.Component {
           </div>
         <div className="game-info">
           <div>{status}</div>
-          <button className="enter-button"
+          <button className="reset-button"
           onClick={() => {
             audioPlay("audio/switch.mp3", this.state.volume);
             this.jumpTo(0);}}>
