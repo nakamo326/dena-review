@@ -75,6 +75,15 @@
     display: flex;
     justify-content: center;
     margin: 2rem 1rem;
+    --neon-text-color: #43e258;
+    text-shadow:
+      -0.2rem -0.2rem 1rem #fff,
+      0.2rem 0.2rem 1rem #fff,
+      0 0 2rem var(--neon-text-color),
+      0 0 4rem var(--neon-text-color),
+      0 0 6rem var(--neon-text-color),
+      0 0 8rem var(--neon-text-color),
+      0 0 10rem var(--neon-text-color);
   }
 
   .indicator {
@@ -90,8 +99,14 @@
 
   .board-on {
     border: 0.4rem solid #fff;
-    animation: light 3.5s infinite alternate;
     --neon-border-color: #43e258;
+    box-shadow:
+      0 0 .5rem #fff,
+      inset 0 0 .5rem #fff,
+      0 0 2rem var(--neon-border-color),
+      inset 0 0 2rem var(--neon-border-color),
+      0 0 4rem var(--neon-border-color),
+      inset 0 0 4rem var(--neon-border-color);
   }
 
   .stone {
@@ -107,13 +122,25 @@
   .stone-color1 {
     border: 0.8rem solid #fff;
     --neon-border-color: rgb(255, 217, 0);
-    animation: light 1.5s infinite alternate;
+    box-shadow:
+      0 0 .5rem #fff,
+      inset 0 0 .5rem #fff,
+      0 0 2rem var(--neon-border-color),
+      inset 0 0 2rem var(--neon-border-color),
+      0 0 4rem var(--neon-border-color),
+      inset 0 0 4rem var(--neon-border-color);
   }
 
   .stone-color2 {
     border: 0.8rem solid #fff;
     --neon-border-color: rgb(25, 0, 255);
-    animation: light 1.5s infinite alternate;
+    box-shadow:
+      0 0 .5rem #fff,
+      inset 0 0 .5rem #fff,
+      0 0 2rem var(--neon-border-color),
+      inset 0 0 2rem var(--neon-border-color),
+      0 0 4rem var(--neon-border-color),
+      inset 0 0 4rem var(--neon-border-color);
   }
 
   .stone:focus {
@@ -150,18 +177,6 @@
     77% {opacity: 1;}
     78% {opacity: 0.3;}
     79% {opacity: 1;}
-  }
-
-  @keyframes light {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-      box-shadow:
-        0 0 .5rem #fff,
-        inset 0 0 .5rem #fff,
-        0 0 2rem var(--neon-border-color),
-        inset 0 0 2rem var(--neon-border-color),
-        0 0 4rem var(--neon-border-color),
-        inset 0 0 4rem var(--neon-border-color);        
-    }
   }
 
   @keyframes flicker {
