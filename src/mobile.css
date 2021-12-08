@@ -59,11 +59,11 @@
     background: #010a01;
     color: #fff;
     font-size: 2rem;
-    padding: 1.5rem 2rem 1.5rem;
+    padding: 1rem 1.5rem 1rem;
     margin: 1rem 0rem 1rem;
     text-align: center;
     cursor: pointer;
-    border: 0.4rem solid #fff;
+    border: 0.3rem solid #fff;
     border-radius: 2rem;
     animation: flicker 2s infinite alternate;
     --neon-text-color: #fa2d5a;
