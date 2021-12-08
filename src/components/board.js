@@ -1,21 +1,7 @@
 import React from 'react';
 import '../index.css';
+import Stone from './stone';
 
-class Stone extends React.Component {
-  render() {
-    let color;
-    if (this.props.value === null)
-      color = "";
-    else
-      color = this.props.value === 'X' ? 'stone-color1' : 'stone-color2';
-    return (
-      <button className={'stone ' + color} onClick={() => {
-        this.props.onClick();
-        }}>
-      </button>
-    )
-  }
-}
 
 class BoardRow extends React.Component {
   renderStone(i) {
@@ -38,7 +24,7 @@ class BoardRow extends React.Component {
         {this.renderStone(this.props.index * 7 + 5)}
         {this.renderStone(this.props.index * 7 + 6)}
       </div>
-    )
+    );
   }
 }
 

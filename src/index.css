@@ -30,7 +30,6 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin: 2rem auto;
 }
 
 .volume {
@@ -38,6 +37,27 @@ body {
   display: flex;
   justify-content: center;
   margin: 2rem 1rem;
+}
+
+.indicator {
+  padding: 0rem 2rem 0rem;
+  width: 20%;
+}
+
+.draw {
+  font-family: 'Kosugi Maru', sans-serif;
+  background: #010a01;
+  font-size: 4rem;
+  color: #fff;
+  padding: 1.5rem 2rem 1.5rem;
+  border-radius: 2rem;
+  text-align: center;
+  width: fit-content;
+  margin: 1rem 4rem 2rem;
+  border: 0.4rem solid #fff;
+  animation: flicker 1s infinite alternate;
+  --neon-text-color: #c02dfa;
+  --neon-border-color: #c02dfa;
 }
 
 .reset-button {
@@ -94,13 +114,10 @@ body {
   color: #646464;
   border-radius: 7rem;
   float: left;
-  line-height: 7rem;
   height: 8rem;
   width: 8rem;
   margin-right: 1rem;
   margin-top: 1rem;
-  padding: 0;
-  text-align: center;
   cursor: pointer;
 }
 

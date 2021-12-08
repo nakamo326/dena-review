@@ -4,6 +4,7 @@ import './index.css';
 
 import Board from './components/board';
 import Volume from './components/volume';
+import Indicator from './components/indicator';
 import {isPlaceable, calculateWinner, audioPlay} from './components/utils.js';
 
 // TODO: Board grid
@@ -64,6 +65,13 @@ class Game extends React.Component {
     });
   }
 
+  resetGame() {
+    this.setState({
+      isDraw: false
+    })
+    this.jumpTo(0);
+  }
+
   toggleVolume() {
     let newVolume;
     if (this.state.volume === 1) {
@@ -84,15 +92,6 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner_streak = calculateWinner(current.squares, 0);
     const winner = winner_streak ? current.squares[winner_streak[0]] : null;
-    let status;
-    if (this.state.isDraw){
-      status = 'Draw'
-    } else if (winner) {
-      status = 'Winner: ' + winner;
-    } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-    }
-
     const onGame = this.state.isEnter ? " board-on" : "";
 
     return (
@@ -110,11 +109,15 @@ class Game extends React.Component {
             <span className="neon flash">棋<span>棋</span></span>
           </div>
         <div className="game-info">
-          <div>{status}</div>
+          <Indicator
+            xIsNext={this.state.xIsNext}
+            isDraw={this.state.isDraw}
+            winner={winner}
+          ></Indicator>
           <button className="reset-button"
           onClick={() => {
             audioPlay("audio/switch.mp3", this.state.volume);
-            this.jumpTo(0);}}>
+            this.resetGame();}}>
           RESET
           </button>
           <Volume
