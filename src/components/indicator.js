@@ -7,46 +7,32 @@ import Stone from './stone';
 class Indicator extends React.Component {
   render() {
     let status;
-    if (this.props.isDraw){
-      status = 'Draw'
-    } else if (this.props.winner) {
+    let left = null;
+    let right = null;
+    if (this.props.winner) {
       status = this.props.winner;
     } else {
       status = this.props.xIsNext ? 'X' : 'O';
     }
-    if (this.props.isDraw){
-      return(
-      <div className="indicator draw">
-        DRAW
-      </div>
-      );
-    } else if (status === 'X') {
-      return (
-        <div className="indicator">
-          <Stone
-            value={'X'}
-            onClick={() => {}}
-          ></Stone>
-          <Stone
-            value={null}
-            onClick={() => {}}
-          ></Stone>
-        </div>
-      )
-    } else if (status === 'O') {
-      return (
-        <div className="indicator">
-          <Stone
-            value={null}
-            onClick={() => {}}
-          ></Stone>
-          <Stone
-            value={'O'}
-            onClick={() => {}}
-          ></Stone>
-        </div>
-      )
+    if (!this.props.isDraw) {
+      if (status === 'X') {
+        left = status;
+      } else {
+        right = status;
+      }
     }
+    return (
+      <div className="indicator">
+        <Stone
+          value={left}
+          onClick={() => {}}
+        ></Stone>
+        <Stone
+          value={right}
+          onClick={() => {}}
+        ></Stone>
+      </div>
+    )
   }
 }
 
