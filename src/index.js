@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './mobile.css';
 
 import Board from './components/board';
 import Volume from './components/volume';
