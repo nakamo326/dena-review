@@ -127,8 +127,7 @@ class Game extends React.Component {
                 this.setState({ isEnter: true });
               }
             }}>
-            {' '}
-            入場 ☞{' '}
+            入場 ☞
           </button>
         </div>
         <div className="game-body">
