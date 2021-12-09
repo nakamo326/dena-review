@@ -1,7 +1,6 @@
-import React from 'react';
-import '../index.css';
-import Stone from './stone';
-
+import React from "react";
+import "../index.css";
+import Stone from "./stone";
 
 // display next player or draw
 class Indicator extends React.Component {
@@ -12,10 +11,10 @@ class Indicator extends React.Component {
     if (this.props.winner) {
       status = this.props.winner;
     } else {
-      status = this.props.xIsNext ? 'X' : 'O';
+      status = this.props.xIsNext ? "X" : "O";
     }
     if (!this.props.isDraw) {
-      if (status === 'X') {
+      if (status === "X") {
         left = status;
       } else {
         right = status;
@@ -23,16 +22,10 @@ class Indicator extends React.Component {
     }
     return (
       <div className="indicator">
-        <Stone
-          value={left}
-          onClick={() => {}}
-        ></Stone>
-        <Stone
-          value={right}
-          onClick={() => {}}
-        ></Stone>
+        <Stone value={left} onClick={() => {}}></Stone>
+        <Stone value={right} onClick={() => {}}></Stone>
       </div>
-    )
+    );
   }
 }
 
