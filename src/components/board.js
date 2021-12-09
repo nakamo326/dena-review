@@ -1,5 +1,4 @@
 import React from 'react';
-import '../index.css';
 import Stone from './stone';
 
 class BoardRow extends React.Component {
@@ -22,19 +21,17 @@ class BoardRow extends React.Component {
   }
 }
 
-class Board extends React.Component {
-  render() {
-    return (
-      <div>
-        <BoardRow index={0} squares={this.props.squares} onClick={(i) => this.props.onClick(i)} />
-        <BoardRow index={1} squares={this.props.squares} onClick={(i) => this.props.onClick(i)} />
-        <BoardRow index={2} squares={this.props.squares} onClick={(i) => this.props.onClick(i)} />
-        <BoardRow index={3} squares={this.props.squares} onClick={(i) => this.props.onClick(i)} />
-        <BoardRow index={4} squares={this.props.squares} onClick={(i) => this.props.onClick(i)} />
-        <BoardRow index={5} squares={this.props.squares} onClick={(i) => this.props.onClick(i)} />
-      </div>
-    );
-  }
+export function Board(props) {
+  return (
+    <div>
+      <BoardRow index={0} squares={props.squares} onClick={(i) => props.onClick(i)} />
+      <BoardRow index={1} squares={props.squares} onClick={(i) => props.onClick(i)} />
+      <BoardRow index={2} squares={props.squares} onClick={(i) => props.onClick(i)} />
+      <BoardRow index={3} squares={props.squares} onClick={(i) => props.onClick(i)} />
+      <BoardRow index={4} squares={props.squares} onClick={(i) => props.onClick(i)} />
+      <BoardRow index={5} squares={props.squares} onClick={(i) => props.onClick(i)} />
+    </div>
+  );
 }
 
 export default Board;

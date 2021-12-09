@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import './mobile.css';
 
-import Board from './components/board';
-import Volume from './components/volume';
+import Title from './components/title';
 import Indicator from './components/indicator';
-import Title from './components/title.js';
-import { isPlaceable, calculateWinner, audioPlay } from './components/utils.js';
-import { enterRoom, openRoom } from './components/p2p.js';
+import Volume from './components/volume';
+import Board from './components/board';
+import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
+import { enterRoom, openRoom } from './components/p2p';
 
 class Game extends React.Component {
   constructor(props) {
@@ -117,7 +117,8 @@ class Game extends React.Component {
             onClick={() => {
               this.toggleVolume();
               audioPlay('audio/switch.mp3', this.state.volume);
-            }}></Volume>
+            }}
+          />
           <button
             className="enter-button"
             onClick={() => {
