@@ -1,12 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import "./mobile.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import './mobile.css';
 
-import Board from "./components/board";
-import Volume from "./components/volume";
-import Indicator from "./components/indicator";
-import { isPlaceable, calculateWinner, audioPlay } from "./components/utils.js";
+import Board from './components/board';
+import Volume from './components/volume';
+import Indicator from './components/indicator';
+import { isPlaceable, calculateWinner, audioPlay } from './components/utils.js';
 
 // TODO: Board grid
 
@@ -36,7 +36,7 @@ class Game extends React.Component {
     if (calculateWinner(squares, 0) || place === null) {
       return;
     }
-    squares[place] = this.state.xIsNext ? "X" : "O";
+    squares[place] = this.state.xIsNext ? 'X' : 'O';
     if (this.state.stepNumber === 41)
       this.setState({
         isDraw: true,
@@ -96,7 +96,7 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner_streak = calculateWinner(current.squares, 0);
     const winner = winner_streak ? current.squares[winner_streak[0]] : null;
-    const onGame = this.state.isEnter ? " board-on" : "";
+    const onGame = this.state.isEnter ? ' board-on' : '';
 
     return (
       <div className="game">
@@ -133,47 +133,39 @@ class Game extends React.Component {
           </span>
         </div>
         <div className="game-info">
-          <Indicator
-            xIsNext={this.state.xIsNext}
-            isDraw={this.state.isDraw}
-            winner={winner}
-          />
+          <Indicator xIsNext={this.state.xIsNext} isDraw={this.state.isDraw} winner={winner} />
           <button
             className="reset-button"
             onClick={() => {
-              audioPlay("audio/switch.mp3", this.state.volume);
+              audioPlay('audio/switch.mp3', this.state.volume);
               this.resetGame();
-            }}
-          >
+            }}>
             RESET
           </button>
           <Volume
             volume={this.state.volume}
             onClick={() => {
               this.toggleVolume();
-              audioPlay("audio/switch.mp3", this.state.volume);
-            }}
-          ></Volume>
+              audioPlay('audio/switch.mp3', this.state.volume);
+            }}></Volume>
           <button
             className="enter-button"
             onClick={() => {
               if (!this.state.isEnter) {
-                audioPlay("audio/bell_sound.mp3", this.state.volume);
+                audioPlay('audio/bell_sound.mp3', this.state.volume);
                 this.setState({ isEnter: true });
               }
-            }}
-          >
-            {" "}
-            入場 ☞{" "}
+            }}>
+            {' '}
+            入場 ☞{' '}
           </button>
         </div>
         <div className="game-body">
-          <div className={"game-board" + onGame}>
+          <div className={'game-board' + onGame}>
             <Board
               squares={current.squares}
               onClick={(i) => {
-                if (this.state.isEnter)
-                  audioPlay("audio/switch.mp3", this.state.volume);
+                if (this.state.isEnter) audioPlay('audio/switch.mp3', this.state.volume);
                 this.handleClick(i);
               }}
             />
@@ -183,10 +175,9 @@ class Game extends React.Component {
         <button
           className="reset-button"
           onClick={() => {
-            audioPlay("audio/switch.mp3", this.state.volume);
+            audioPlay('audio/switch.mp3', this.state.volume);
             this.getConnect();
-          }}
-        >
+          }}>
           getConnectTest
         </button>
       </div>
@@ -196,4 +187,4 @@ class Game extends React.Component {
 
 // ========================================
 
-ReactDOM.render(<Game />, document.getElementById("root"));
+ReactDOM.render(<Game />, document.getElementById('root'));

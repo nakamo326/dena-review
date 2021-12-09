@@ -38,11 +38,7 @@ export function calculateWinner(squares, index) {
       (row + dirList[i][0] * 3) * 7 + (col + dirList[i][1] * 3),
     ];
     if (!checkJump(i, [a, b, c])) continue;
-    if (
-      squares[a] === squares[b] &&
-      squares[a] === squares[c] &&
-      squares[a] === squares[d]
-    ) {
+    if (squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
       console.log(a);
       console.log(b);
       console.log(c);
@@ -76,7 +72,7 @@ export function audioPlay(path, volume) {
   audio
     .play()
     .then(() => {
-      console.log("Audio started!");
+      console.log('Audio started!');
     })
     .catch((error) => console.warn(error));
 }
