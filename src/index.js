@@ -6,9 +6,9 @@ import './mobile.css';
 import Board from './components/board';
 import Volume from './components/volume';
 import Indicator from './components/indicator';
+import Title from './components/title.js';
 import { isPlaceable, calculateWinner, audioPlay } from './components/utils.js';
-
-// TODO: Board grid
+import { enterRoom, openRoom } from './components/p2p.js';
 
 class Game extends React.Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class Game extends React.Component {
       isEnter: false,
       isDraw: false,
       volume: 0.5,
+      peer: null,
     };
   }
 
@@ -100,38 +101,7 @@ class Game extends React.Component {
 
     return (
       <div className="game">
-        <div className="game-title">
-          <span className="neon flash">
-            電<span>電</span>
-          </span>
-          <span className="neon flash">
-            脳<span>脳</span>
-          </span>
-          <span className="neon flash">
-            盤<span>盤</span>
-          </span>
-          <span className="neon flash">
-            上<span>上</span>
-          </span>
-          <span className="neon flash">
-            娯<span>娯</span>
-          </span>
-          <span className="neon flash">
-            楽<span>楽</span>
-          </span>
-          <span className="neon flash">
-            &nbsp;<span>&nbsp;</span>
-          </span>
-          <span className="neon flash">
-            四<span>四</span>
-          </span>
-          <span className="neon flash">
-            子<span>子</span>
-          </span>
-          <span className="neon flash">
-            棋<span>棋</span>
-          </span>
-        </div>
+        <Title />
         <div className="game-info">
           <Indicator xIsNext={this.state.xIsNext} isDraw={this.state.isDraw} winner={winner} />
           <button
@@ -172,14 +142,8 @@ class Game extends React.Component {
           </div>
         </div>
         <input type="text" name="roomId" placeholder="Enter" />
-        <button
-          className="reset-button"
-          onClick={() => {
-            audioPlay('audio/switch.mp3', this.state.volume);
-            this.getConnect();
-          }}>
-          getConnectTest
-        </button>
+        <button onClick={() => openRoom('000')}>openRoom</button>
+        <button onClick={() => enterRoom('000')}>enterRoom</button>
       </div>
     );
   }

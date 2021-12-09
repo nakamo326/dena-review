@@ -1,37 +1,56 @@
-import Peer from "peerjs";
+import Peer from 'peerjs';
 
-function getConnect() {
-  // 両方サーバーへ接続 id は数字　+　ukeru okuru?
-  const peer = new Peer("client1", {
-    host: "localhost",
-    port: 9000,
-    path: "/",
+//idのパースどこでやる？
+
+export function openRoom(id) {
+  const ownerId = id + 'owner';
+  console.log(ownerId);
+  const peer = new Peer(ownerId, {
+    host: 'peerjsdena.herokuapp.com',
+    port: 443,
+    path: '/',
+    secure: true,
   });
-
-  // 接続待ち(client2)
-  peer.on("connection", (conn) => {
-    console.log("他のクライアントからの接続あり");
-    conn.on("data", (data) => {
+  // receive
+  peer.on('connection', (conn) => {
+    console.log('get connection with ' + id + 'visitor');
+    conn.on('data', function (data) {
+      // Will print 'hi!'
       console.log(data);
     });
-    conn.send("send message");
   });
+  console.log(peer);
+}
 
-  // 接続(client1)
-  const conn = peer.connect("client2");
-  conn.on("open", () => {
-    console.log("client2に接続できました。");
-    conn.send("message");
+export function enterRoom(id) {
+  const visitorId = id + 'visitor';
+  const ownerId = id + 'owner';
+  console.log(visitorId);
+  console.log(ownerId);
+  const peer = new Peer(visitorId, {
+    host: 'peerjsdena.herokuapp.com',
+    port: 443,
+    path: '/',
+    secure: true,
   });
-  conn.on("data", (data) => {
-    console.log(data);
+  console.log('connect peer server');
+
+  // send
+  const conn = peer.connect(ownerId);
+  peer.on('error', function (err) {
+    console.log(err);
+  });
+  conn.on('open', () => {
+    conn.on('data', function (data) {
+      console.log('Received', data);
+    });
+    console.log('get connection with ' + ownerId);
+    conn.send('hi!');
   });
 }
 
-export default getConnect;
-
 //serverはheroku
 
-// ユーザーの間で共通の鍵を考えてもらう。
+// ユーザーの間で共通の鍵を考えてもらう。数字
 // 部屋を開くほうのidは""鍵 + owner"
 // 部屋を開くほうのidは""鍵 + visitor"

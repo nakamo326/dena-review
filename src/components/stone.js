@@ -1,19 +1,15 @@
-import React from 'react';
-import '../index.css';
-
-class Stone extends React.Component {
-  render() {
-    let color;
-    if (this.props.value === null) color = '';
-    else color = this.props.value === 'X' ? 'stone-color1' : 'stone-color2';
-    return (
-      <button
-        className={'stone ' + color}
-        onClick={() => {
-          this.props.onClick();
-        }}></button>
-    );
-  }
+export function Stone(props) {
+  let color;
+  if (props.value === null) color = '';
+  else color = props.value === 'X' ? 'stone-color1' : 'stone-color2';
+  return (
+    <button
+      className={'stone ' + color}
+      onClick={() => {
+        props.onClick();
+      }}
+    />
+  );
 }
 
 export default Stone;
