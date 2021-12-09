@@ -5,6 +5,7 @@ export function BoardRow(props) {
     <div className="board-row">
       {[0, 1, 2, 3, 4, 5, 6].map((j) => (
         <Stone
+          key={j}
           value={props.squares[props.i * 7 + j]}
           onClick={() => props.onClick(props.i * 7 + j)}
         />
@@ -17,7 +18,7 @@ export function Board(props) {
   return (
     <div>
       {[0, 1, 2, 3, 4, 5].map((i) => (
-        <BoardRow i={i} squares={props.squares} onClick={(j) => props.onClick(j)} />
+        <BoardRow key={i} i={i} squares={props.squares} onClick={(j) => props.onClick(j)} />
       ))}
     </div>
   );

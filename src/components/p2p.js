@@ -15,7 +15,6 @@ export function openRoom(id) {
   peer.on('connection', (conn) => {
     console.log('get connection with ' + id + 'visitor');
     conn.on('data', function (data) {
-      // Will print 'hi!'
       console.log(data);
     });
   });
