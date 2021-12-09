@@ -9,13 +9,7 @@ class BoardRow extends React.Component {
   render() {
     return (
       <div className="board-row">
-        {this.renderStone(this.props.index * 7 + 0)}
-        {this.renderStone(this.props.index * 7 + 1)}
-        {this.renderStone(this.props.index * 7 + 2)}
-        {this.renderStone(this.props.index * 7 + 3)}
-        {this.renderStone(this.props.index * 7 + 4)}
-        {this.renderStone(this.props.index * 7 + 5)}
-        {this.renderStone(this.props.index * 7 + 6)}
+        {[0, 1, 2, 3, 4, 5, 6].map((j) => this.renderStone(this.props.i * 7 + j))}
       </div>
     );
   }
@@ -24,12 +18,9 @@ class BoardRow extends React.Component {
 export function Board(props) {
   return (
     <div>
-      <BoardRow index={0} squares={props.squares} onClick={(i) => props.onClick(i)} />
-      <BoardRow index={1} squares={props.squares} onClick={(i) => props.onClick(i)} />
-      <BoardRow index={2} squares={props.squares} onClick={(i) => props.onClick(i)} />
-      <BoardRow index={3} squares={props.squares} onClick={(i) => props.onClick(i)} />
-      <BoardRow index={4} squares={props.squares} onClick={(i) => props.onClick(i)} />
-      <BoardRow index={5} squares={props.squares} onClick={(i) => props.onClick(i)} />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <BoardRow i={i} squares={props.squares} onClick={(j) => props.onClick(j)} />
+      ))}
     </div>
   );
 }
