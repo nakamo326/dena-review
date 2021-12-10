@@ -44,12 +44,16 @@ const Game = () => {
   const handleClick = useCallback(
     (i) => {
       if (!isEnter || isDraw) return;
+      // if (socket !== null && isWait) return;
       audioPlay('audio/switch.mp3', volume);
       const newHistory = history.slice(0, stepNumber + 1);
       const squares = newHistory[newHistory.length - 1].squares.slice();
       const place = isPlaceable(squares, i);
       if (calculateWinner(squares, 0) || place === null) {
         return;
+      }
+      if (socket) {
+        socket.send(place);
       }
       squares[place] = xIsNext ? 'X' : 'O';
       const winnerStreak = calculateWinner(squares, 0);
@@ -73,7 +77,7 @@ const Game = () => {
       setStepNumber(history.length);
       setXIsNext(!xIsNext);
     },
-    [isEnter, isDraw, history, stepNumber, xIsNext, volume],
+    [isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
   );
 
   const jumpTo = (step) => {
@@ -82,16 +86,16 @@ const Game = () => {
   };
 
   const resetGame = () => {
+    audioPlay('audio/switch.mp3', volume);
     setIsDraw(false);
     jumpTo(0);
   };
 
-  // websocket test
-  const connectWebsocket = () => {
+  const connectWebsocket = (id) => {
     const ws = new WebSocket('wss://murmuring-lowlands-58469.herokuapp.com');
     ws.addEventListener('open', (e) => {
       console.log('get connection with server!');
-      ws.send('message from client!');
+      ws.send(JSON.stringify({ roomId: id }));
     });
     setSocket(ws);
   };
@@ -109,12 +113,7 @@ const Game = () => {
       <Title />
       <div className="game-info">
         <Indicator xIsNext={xIsNext} isDraw={isDraw} winner={winner} />
-        <button
-          className="reset-button"
-          onClick={() => {
-            audioPlay('audio/switch.mp3', volume);
-            resetGame();
-          }}>
+        <button className="reset-button" onClick={resetGame}>
           RESET
         </button>
         <Volume volume={volume} onClick={toggleVolume} />
@@ -135,7 +134,7 @@ const Game = () => {
         </div>
       </div>
       <input type="text" name="roomId" placeholder="Enter" />
-      <button onClick={() => connectWebsocket()}>connectWebsocket</button>
+      <button onClick={() => connectWebsocket(345)}>connectWebsocket</button>
       <button onClick={() => sendMessage()}>sendMassage</button>
     </div>
   );
