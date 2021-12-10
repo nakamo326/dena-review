@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './mobile.css';
@@ -9,7 +9,10 @@ import Volume from './components/volume';
 import Board from './components/board';
 import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
 
+// socket timeout check
+
 const Game = () => {
+  const SERVER_URL = 'wss://murmuring-lowlands-58469.herokuapp.com';
   const [history, setHistory] = useState([
     {
       squares: Array(42).fill(null),
@@ -17,12 +20,11 @@ const Game = () => {
   ]);
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXIsNext] = useState(true);
-
   const [isEnter, setIsEnter] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [socket, setSocket] = useState(null);
-  // socketがnullかどうかを対戦モードかどうかの判定に使う
+  const [isMyTurn, setIsMyTurn] = useState(false);
 
   const toggleVolume = useCallback(() => {
     audioPlay('audio/switch.mp3', volume);
@@ -43,17 +45,22 @@ const Game = () => {
 
   const handleClick = useCallback(
     (i) => {
-      if (!isEnter || isDraw) return;
-      // if (socket !== null && isWait) return;
+      console.log('call handleClick!');
+      if (!isEnter || isDraw || (socket && !isMyTurn)) {
+        audioPlay('audio/disable.mp3', volume);
+        console.log('but return..');
+        return;
+      }
       audioPlay('audio/switch.mp3', volume);
       const newHistory = history.slice(0, stepNumber + 1);
       const squares = newHistory[newHistory.length - 1].squares.slice();
       const place = isPlaceable(squares, i);
-      if (calculateWinner(squares, 0) || place === null) {
+      if (calculateWinner(squares, 0) || !place) {
         return;
       }
-      if (socket) {
-        socket.send(place);
+      if (socket && isMyTurn) {
+        socket.send(JSON.stringify({ col: i }));
+        setIsMyTurn(false);
       }
       squares[place] = xIsNext ? 'X' : 'O';
       const winnerStreak = calculateWinner(squares, 0);
@@ -77,8 +84,60 @@ const Game = () => {
       setStepNumber(history.length);
       setXIsNext(!xIsNext);
     },
-    [isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
+    [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
   );
+
+  const handleMassage = useCallback(
+    (i) => {
+      console.log('call handleMessage!');
+      if (!isEnter || isDraw || (socket && isMyTurn)) {
+        audioPlay('audio/disable.mp3', volume);
+        console.log('but return..');
+        return;
+      }
+      audioPlay('audio/switch.mp3', volume);
+      const newHistory = history.slice(0, stepNumber + 1);
+      const squares = newHistory[newHistory.length - 1].squares.slice();
+      const place = isPlaceable(squares, i);
+      if (calculateWinner(squares, 0) || !place) {
+        return;
+      }
+      squares[place] = xIsNext ? 'X' : 'O';
+      const winnerStreak = calculateWinner(squares, 0);
+      const winner = winnerStreak ? squares[winnerStreak[0]] : null;
+      if (winnerStreak) {
+        for (let i = 0; i < squares.length; i++) {
+          const match = winnerStreak.includes(i);
+          squares[i] = match ? winner : null;
+        }
+      }
+      if (!winnerStreak && stepNumber === 41) {
+        setIsDraw(true);
+      }
+      setHistory(
+        history.concat([
+          {
+            squares: squares,
+          },
+        ]),
+      );
+      setStepNumber(history.length);
+      setXIsNext(!xIsNext);
+      setIsMyTurn(true);
+    },
+    [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
+  );
+
+  useEffect(() => {
+    if (socket && !isMyTurn) {
+      socket.addEventListener('message', (m) => {
+        const json = JSON.parse(m.data);
+        console.log(json);
+
+        handleMassage(json.col);
+      });
+    }
+  }, [isMyTurn, socket, handleMassage]);
 
   const jumpTo = (step) => {
     setStepNumber(step);
@@ -92,16 +151,14 @@ const Game = () => {
   };
 
   const connectWebsocket = (id) => {
-    const ws = new WebSocket('wss://murmuring-lowlands-58469.herokuapp.com');
+    const ws = new WebSocket(SERVER_URL);
     ws.addEventListener('open', (e) => {
       console.log('get connection with server!');
       ws.send(JSON.stringify({ roomId: id }));
     });
+    setIsEnter(true);
+    setIsMyTurn(false); //test
     setSocket(ws);
-  };
-
-  const sendMessage = () => {
-    socket.send('massage from client!');
   };
 
   const current = history[stepNumber];
@@ -134,8 +191,9 @@ const Game = () => {
         </div>
       </div>
       <input type="text" name="roomId" placeholder="Enter" />
-      <button onClick={() => connectWebsocket(345)}>connectWebsocket</button>
-      <button onClick={() => sendMessage()}>sendMassage</button>
+      <button disabled={isMyTurn} onClick={() => connectWebsocket(345)}>
+        connectWebsocket
+      </button>
     </div>
   );
 };

@@ -73,3 +73,9 @@ export function audioPlay(path, volume) {
     })
     .catch((error) => console.warn(error));
 }
+
+// ArrayBuffer から文字列への変換
+
+export function buffer_to_string(buf) {
+  return String.fromCharCode.apply('', new Uint16Array(buf));
+}
