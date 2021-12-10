@@ -78,12 +78,16 @@ class Game extends React.Component {
 
   toggleVolume() {
     let newVolume;
-    if (this.state.volume === 1) {
-      newVolume = 0.5;
-    } else if (this.state.volume === 0.5) {
-      newVolume = 0;
-    } else {
-      newVolume = 1;
+    switch (this.state.volume) {
+      case 1:
+        newVolume = 0.5;
+        break;
+      case 0.5:
+        newVolume = 0;
+        break;
+      default:
+        newVolume = 1;
+        break;
     }
     console.log(newVolume);
     this.setState({
