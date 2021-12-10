@@ -1,6 +1,8 @@
+import React, { useCallback } from 'react';
 import Stone from './stone';
 
-export default function Indicator(props) {
+const Indicator = React.memo((props) => {
+  const voidFunc = useCallback(() => {}, []);
   let status;
   let left = null;
   let right = null;
@@ -18,8 +20,10 @@ export default function Indicator(props) {
   }
   return (
     <div className="indicator">
-      <Stone value={left} onClick={() => {}}></Stone>
-      <Stone value={right} onClick={() => {}}></Stone>
+      <Stone value={left} onClick={voidFunc}></Stone>
+      <Stone value={right} onClick={voidFunc}></Stone>
     </div>
   );
-}
+});
+
+export default Indicator;
