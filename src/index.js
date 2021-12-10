@@ -147,6 +147,7 @@ const Game = () => {
             }
             break;
           case 'set':
+            // check message
             handleMassage(json.col);
             break;
           case 'end':
