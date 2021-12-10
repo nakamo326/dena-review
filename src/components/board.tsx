@@ -1,6 +1,19 @@
+import React from 'react';
 import Stone from './stone';
 
-export function BoardRow(props) {
+
+type BoardRowProps = {
+  squares: Array<string>;
+  onClick: (arg0: number) =>  void;
+  row:  number;
+};
+
+type BoardProps = {
+  squares: Array<string>;
+  onClick: (arg0: number) =>  void;
+};
+
+export function BoardRow(props: BoardRowProps) {
   return (
     <div className="board-row">
       {[0, 1, 2, 3, 4, 5, 6].map((col) => (
@@ -14,7 +27,7 @@ export function BoardRow(props) {
   );
 }
 
-export default function Board(props) {
+export default function Board(props: BoardProps) {
   return (
     <div>
       {[0, 1, 2, 3, 4, 5].map((id) => (

@@ -1,13 +1,16 @@
 //  return placeable index number, or return null if stone is full on col
-export function isPlaceable(squares, col) {
+export function isPlaceable(squares: Array<string>, col: number) {
   for (let row = 5; row >= 0; row--) {
     const index = row * 7 + col;
-    if (squares[index] === null) return index;
+    if (squares[index] === null){
+      console.log(index);
+      return index;
+    }
   }
   return null;
 }
 
-export function calculateWinner(squares, index) {
+export function calculateWinner(squares: Array<string>, index: number): Array<number> | null {
   const row = Math.trunc(index / 7);
   const col = index % 7;
   const dirList = [
@@ -46,7 +49,7 @@ export function calculateWinner(squares, index) {
   return calculateWinner(squares, index + 1);
 }
 
-function isOverRun(dir, array) {
+function isOverRun(dir: number, array: Array<number>) {
   for (let i = 0; i < array.length; i++) {
     const element = array[i];
     const row = Math.trunc(element / 7);
@@ -63,7 +66,7 @@ function isOverRun(dir, array) {
   return true;
 }
 
-export function audioPlay(path, volume) {
+export function audioPlay(path: string, volume: number) {
   const audio = new Audio(path);
   audio.volume = volume;
   audio
@@ -76,6 +79,6 @@ export function audioPlay(path, volume) {
 
 // ArrayBuffer から文字列への変換
 
-export function buffer_to_string(buf) {
-  return String.fromCharCode.apply('', new Uint16Array(buf));
-}
+// export function buffer_to_string(buf: any) {
+//   return String.fromCharCode.apply('', new Uint16Array(buf));
+// }

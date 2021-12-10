@@ -1,7 +1,12 @@
 import React from 'react';
 import '../index.css';
 
-const Volume = React.memo((props) => {
+type VolumeProps = {
+  volume: number;
+  onClick: () =>  void;
+};
+
+const Volume = React.memo((props: VolumeProps) => {
   if (props.volume === 1) {
     return (
       <div className="volume">

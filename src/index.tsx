@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+// import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './mobile.css';
@@ -12,7 +13,7 @@ import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
 // socket timeout check
 
 const Game = () => {
-  const SERVER_URL = 'wss://murmuring-lowlands-58469.herokuapp.com';
+  // const SERVER_URL = 'wss://murmuring-lowlands-58469.herokuapp.com';
   const [history, setHistory] = useState([
     {
       squares: Array(42).fill(null),
@@ -23,8 +24,10 @@ const Game = () => {
   const [isEnter, setIsEnter] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
   const [volume, setVolume] = useState(0.5);
-  const [socket, setSocket] = useState(null);
-  const [isMyTurn, setIsMyTurn] = useState(false);
+  //const [socket, setSocket] = useState(null);
+  const [socket] = useState(null);
+  // const [isMyTurn, setIsMyTurn] = useState(false);
+  const [isMyTurn] = useState(false);
 
   const toggleVolume = useCallback(() => {
     audioPlay('audio/switch.mp3', volume);
@@ -52,16 +55,17 @@ const Game = () => {
         return;
       }
       const newHistory = history.slice(0, stepNumber + 1);
-      const squares = newHistory[newHistory.length - 1].squares.slice();
+      const current = newHistory[newHistory.length - 1]
+      const squares = current.squares.slice();
       const place = isPlaceable(squares, i);
-      if (calculateWinner(squares, 0) || !place) {
+      if (calculateWinner(squares, 0) || place === null) {
         return;
       }
       audioPlay('audio/switch.mp3', volume);
-      if (socket && isMyTurn) {
-        socket.send(JSON.stringify({ type: 'set', col: i }));
-        setIsMyTurn(false);
-      }
+      // if (socket && isMyTurn) {
+      //   socket.send(JSON.stringify({ type: 'set', col: i }));
+      //   setIsMyTurn(false);
+      // }
       squares[place] = xIsNext ? 'X' : 'O';
       const winnerStreak = calculateWinner(squares, 0);
       const winner = winnerStreak ? squares[winnerStreak[0]] : null;
@@ -87,80 +91,80 @@ const Game = () => {
     [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
   );
 
-  const handleMassage = useCallback(
-    (i) => {
-      console.log('call handleMessage!');
-      if (!isEnter || isDraw || (socket && isMyTurn)) {
-        audioPlay('audio/disable.mp3', volume);
-        console.log('but return..');
-        return;
-      }
-      const newHistory = history.slice(0, stepNumber + 1);
-      const squares = newHistory[newHistory.length - 1].squares.slice();
-      const place = isPlaceable(squares, i);
-      if (calculateWinner(squares, 0) || !place) {
-        return;
-      }
-      audioPlay('audio/switch.mp3', volume);
-      squares[place] = xIsNext ? 'X' : 'O';
-      const winnerStreak = calculateWinner(squares, 0);
-      const winner = winnerStreak ? squares[winnerStreak[0]] : null;
-      if (winnerStreak) {
-        for (let i = 0; i < squares.length; i++) {
-          const match = winnerStreak.includes(i);
-          squares[i] = match ? winner : null;
-        }
-      }
-      if (!winnerStreak && stepNumber === 41) {
-        setIsDraw(true);
-      }
-      setHistory(
-        newHistory.concat([
-          {
-            squares: squares,
-          },
-        ]),
-      );
-      setStepNumber(newHistory.length);
-      setXIsNext(!xIsNext);
-      setIsMyTurn(true);
-    },
-    [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
-  );
+  // const handleMassage = useCallback(
+  //   (i) => {
+  //     console.log('call handleMessage!');
+  //     if (!isEnter || isDraw || (socket && isMyTurn)) {
+  //       audioPlay('audio/disable.mp3', volume);
+  //       console.log('but return..');
+  //       return;
+  //     }
+  //     const newHistory = history.slice(0, stepNumber + 1);
+  //     const squares = newHistory[newHistory.length - 1].squares.slice();
+  //     const place = isPlaceable(squares, i);
+  //     if (calculateWinner(squares, 0) || !place) {
+  //       return;
+  //     }
+  //     audioPlay('audio/switch.mp3', volume);
+  //     squares[place] = xIsNext ? 'X' : 'O';
+  //     const winnerStreak = calculateWinner(squares, 0);
+  //     const winner = winnerStreak ? squares[winnerStreak[0]] : null;
+  //     if (winnerStreak) {
+  //       for (let i = 0; i < squares.length; i++) {
+  //         const match = winnerStreak.includes(i);
+  //         squares[i] = match ? winner : null;
+  //       }
+  //     }
+  //     if (!winnerStreak && stepNumber === 41) {
+  //       setIsDraw(true);
+  //     }
+  //     setHistory(
+  //       newHistory.concat([
+  //         {
+  //           squares: squares,
+  //         },
+  //       ]),
+  //     );
+  //     setStepNumber(newHistory.length);
+  //     setXIsNext(!xIsNext);
+  //     setIsMyTurn(true);
+  //   },
+  //   [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
+  // );
 
-  useEffect(() => {
-    if (socket) {
-      socket.addEventListener('message', (m) => {
-        const json = JSON.parse(m.data);
-        const type = json.type;
-        console.log(json);
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.addEventListener('message', (m) => {
+  //       const json = JSON.parse(m.data);
+  //       const type = json.type;
+  //       console.log(json);
 
-        switch (type) {
-          case 'init':
-            if (json.opponent) {
-              console.log('game start!');
-              setIsEnter(true);
-              setIsMyTurn(json.isYourTurn);
-            } else {
-              setIsMyTurn(false);
-              console.log('waiting opponent player...');
-            }
-            break;
-          case 'set':
-            // check message
-            handleMassage(json.col);
-            break;
-          case 'end':
-            socket.close();
-            break;
-          default:
-            break;
-        }
-      });
-    }
-  }, [isMyTurn, socket, handleMassage]);
+  //       switch (type) {
+  //         case 'init':
+  //           if (json.opponent) {
+  //             console.log('game start!');
+  //             setIsEnter(true);
+  //             setIsMyTurn(json.isYourTurn);
+  //           } else {
+  //             setIsMyTurn(false);
+  //             console.log('waiting opponent player...');
+  //           }
+  //           break;
+  //         case 'set':
+  //           // check message
+  //           handleMassage(json.col);
+  //           break;
+  //         case 'end':
+  //           socket.close();
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     });
+  //   }
+  // }, [isMyTurn, socket, handleMassage]);
 
-  const jumpTo = (step) => {
+  const jumpTo = (step: number) => {
     setStepNumber(step);
     setXIsNext(step % 2 === 0);
   };
@@ -171,14 +175,14 @@ const Game = () => {
     jumpTo(0);
   };
 
-  const connectWebsocket = (id) => {
-    const ws = new WebSocket(SERVER_URL);
-    ws.addEventListener('open', (e) => {
-      console.log('get connection with server!');
-      ws.send(JSON.stringify({ type: 'init', roomId: id }));
-    });
-    setSocket(ws);
-  };
+  // const connectWebsocket = (id: number) => {
+  //   const ws = new WebSocket(SERVER_URL);
+  //   ws.addEventListener('open', (e) => {
+  //     console.log('get connection with server!');
+  //     ws.send(JSON.stringify({ type: 'init', roomId: id }));
+  //   });
+  //   setSocket(ws);
+  // };
 
   // maybe server problems
   const current = history[stepNumber];
@@ -212,9 +216,9 @@ const Game = () => {
         </div>
       </div>
       <input type="text" name="roomId" placeholder="Enter" />
-      <button disabled={isMyTurn} onClick={() => connectWebsocket(345)}>
+      {/* <button disabled={isMyTurn} onClick={() => connectWebsocket(345)}>
         connectWebsocket
-      </button>
+      </button> */}
       <p>{isMyTurn ? 'YOUR TURN' : 'WAIT OPPONENT TURN or NOT REMOTE GAME'}</p>
     </div>
   );

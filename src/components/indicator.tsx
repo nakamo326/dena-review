@@ -1,11 +1,17 @@
 import React, { useCallback } from 'react';
 import Stone from './stone';
 
-const Indicator = React.memo((props) => {
+type DataProps = {
+  xIsNext: boolean;
+  isDraw: boolean;
+  winner: string | null;
+};
+
+const Indicator = React.memo((props: DataProps) => {
   const voidFunc = useCallback(() => {}, []);
   let status;
-  let left = null;
-  let right = null;
+  let left: string | null = null;
+  let right: string | null  = null;
   if (props.winner) {
     status = props.winner;
   } else {
