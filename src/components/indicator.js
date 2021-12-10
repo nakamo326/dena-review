@@ -1,6 +1,6 @@
 import Stone from './stone';
 
-export function Indicator(props) {
+export default function Indicator(props) {
   let status;
   let left = null;
   let right = null;
@@ -23,5 +23,3 @@ export function Indicator(props) {
     </div>
   );
 }
-
-export default Indicator;

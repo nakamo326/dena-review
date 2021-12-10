@@ -1,4 +1,6 @@
-export function Title() {
+import React from 'react';
+
+const Title = React.memo(() => {
   return (
     <div className="game-title">
       <span className="neon flash">
@@ -33,6 +35,6 @@ export function Title() {
       </span>
     </div>
   );
-}
+});
 
 export default Title;

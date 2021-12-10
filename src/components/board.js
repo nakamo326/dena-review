@@ -14,7 +14,7 @@ export function BoardRow(props) {
   );
 }
 
-export function Board(props) {
+export default function Board(props) {
   return (
     <div>
       {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -23,5 +23,3 @@ export function Board(props) {
     </div>
   );
 }
-
-export default Board;
