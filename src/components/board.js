@@ -3,11 +3,11 @@ import Stone from './stone';
 export function BoardRow(props) {
   return (
     <div className="board-row">
-      {[0, 1, 2, 3, 4, 5, 6].map((j) => (
+      {[0, 1, 2, 3, 4, 5, 6].map((col) => (
         <Stone
-          key={j}
-          value={props.squares[props.i * 7 + j]}
-          onClick={() => props.onClick(props.i * 7 + j)}
+          key={col}
+          value={props.squares[props.row * 7 + col]}
+          onClick={() => props.onClick(col)}
         />
       ))}
     </div>
@@ -18,7 +18,7 @@ export default function Board(props) {
   return (
     <div>
       {[0, 1, 2, 3, 4, 5].map((id) => (
-        <BoardRow key={id} i={id} squares={props.squares} onClick={(j) => props.onClick(j)} />
+        <BoardRow key={id} row={id} squares={props.squares} onClick={(i) => props.onClick(i)} />
       ))}
     </div>
   );

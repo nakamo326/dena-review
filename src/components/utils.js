@@ -26,15 +26,20 @@ export function calculateWinner(squares, index) {
   }
   if (squares[index] !== null) {
     for (let i = 0; i < 8; i++) {
-      const [a, b, c, d] = [
+      const line = [
         (row + dirList[i][0] * 0) * 7 + (col + dirList[i][1] * 0),
         (row + dirList[i][0] * 1) * 7 + (col + dirList[i][1] * 1),
         (row + dirList[i][0] * 2) * 7 + (col + dirList[i][1] * 2),
         (row + dirList[i][0] * 3) * 7 + (col + dirList[i][1] * 3),
       ];
-      if (!isOverRun(i, [a, b, c])) continue;
-      if (squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
-        return [a, b, c, d];
+      if (!isOverRun(i, line)) continue;
+      const set = new Set(
+        line.map((val) => {
+          return squares[val];
+        }),
+      );
+      if (set.size === 1) {
+        return line;
       }
     }
   }
