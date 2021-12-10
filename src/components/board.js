@@ -17,8 +17,8 @@ export function BoardRow(props) {
 export default function Board(props) {
   return (
     <div>
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <BoardRow key={i} i={i} squares={props.squares} onClick={(j) => props.onClick(j)} />
+      {[0, 1, 2, 3, 4, 5].map((id) => (
+        <BoardRow key={id} i={id} squares={props.squares} onClick={(j) => props.onClick(j)} />
       ))}
     </div>
   );
