@@ -8,7 +8,6 @@ import Indicator from './components/indicator';
 import Volume from './components/volume';
 import Board from './components/board';
 import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
-import { enterRoom, openRoom } from './components/p2p';
 
 class Game extends React.Component {
   constructor(props) {
@@ -24,7 +23,7 @@ class Game extends React.Component {
       isEnter: false,
       isDraw: false,
       volume: 0.5,
-      peer: null,
+      socket: null, // socketがnullかどうかを対戦モードかどうかの判定に使う
     };
   }
 
@@ -92,6 +91,23 @@ class Game extends React.Component {
     });
   }
 
+  // websocket test
+  connectWebsocket() {
+    const ws = new WebSocket('wss://murmuring-lowlands-58469.herokuapp.com');
+
+    ws.addEventListener('open', (e) => {
+      console.log('get connection with server!');
+      ws.send('message from client!');
+    });
+    this.setState({
+      socket: ws,
+    });
+  }
+
+  sendMessage() {
+    this.socket.send('massage from client!');
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -142,8 +158,8 @@ class Game extends React.Component {
           </div>
         </div>
         <input type="text" name="roomId" placeholder="Enter" />
-        <button onClick={() => openRoom('000')}>openRoom</button>
-        <button onClick={() => enterRoom('000')}>enterRoom</button>
+        <button onClick={() => this.connectWebsocket()}>connectWebsocket</button>
+        <button onClick={() => this.sendMessage()}>sendMassage</button>
       </div>
     );
   }
