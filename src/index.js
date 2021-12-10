@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './mobile.css';
@@ -23,6 +23,23 @@ const Game = () => {
   const [volume, setVolume] = useState(0.5);
   const [socket, setSocket] = useState(null);
   // socketがnullかどうかを対戦モードかどうかの判定に使う
+
+  const toggleVolume = useCallback(() => {
+    audioPlay('audio/switch.mp3', volume);
+    let newVolume;
+    switch (volume) {
+      case 1:
+        newVolume = 0.5;
+        break;
+      case 0.5:
+        newVolume = 0;
+        break;
+      default:
+        newVolume = 1;
+        break;
+    }
+    setVolume(newVolume);
+  }, [volume]);
 
   const handleClick = (i) => {
     if (!isEnter || isDraw) return;
@@ -65,22 +82,6 @@ const Game = () => {
     jumpTo(0);
   };
 
-  const toggleVolume = () => {
-    let newVolume;
-    switch (volume) {
-      case 1:
-        newVolume = 0.5;
-        break;
-      case 0.5:
-        newVolume = 0;
-        break;
-      default:
-        newVolume = 1;
-        break;
-    }
-    setVolume(newVolume);
-  };
-
   // websocket test
   const connectWebsocket = () => {
     const ws = new WebSocket('wss://murmuring-lowlands-58469.herokuapp.com');
@@ -112,13 +113,7 @@ const Game = () => {
           }}>
           RESET
         </button>
-        <Volume
-          volume={volume}
-          onClick={() => {
-            toggleVolume();
-            audioPlay('audio/switch.mp3', volume);
-          }}
-        />
+        <Volume volume={volume} onClick={toggleVolume} />
         <button
           className="enter-button"
           onClick={() => {
