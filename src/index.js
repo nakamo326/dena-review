@@ -51,15 +51,15 @@ const Game = () => {
         console.log('but return..');
         return;
       }
-      audioPlay('audio/switch.mp3', volume);
       const newHistory = history.slice(0, stepNumber + 1);
       const squares = newHistory[newHistory.length - 1].squares.slice();
       const place = isPlaceable(squares, i);
       if (calculateWinner(squares, 0) || !place) {
         return;
       }
+      audioPlay('audio/switch.mp3', volume);
       if (socket && isMyTurn) {
-        socket.send(JSON.stringify({ col: i }));
+        socket.send(JSON.stringify({ type: 'set', col: i }));
         setIsMyTurn(false);
       }
       squares[place] = xIsNext ? 'X' : 'O';
@@ -75,13 +75,13 @@ const Game = () => {
         setIsDraw(true);
       }
       setHistory(
-        history.concat([
+        newHistory.concat([
           {
             squares: squares,
           },
         ]),
       );
-      setStepNumber(history.length);
+      setStepNumber(newHistory.length);
       setXIsNext(!xIsNext);
     },
     [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
@@ -95,13 +95,13 @@ const Game = () => {
         console.log('but return..');
         return;
       }
-      audioPlay('audio/switch.mp3', volume);
       const newHistory = history.slice(0, stepNumber + 1);
       const squares = newHistory[newHistory.length - 1].squares.slice();
       const place = isPlaceable(squares, i);
       if (calculateWinner(squares, 0) || !place) {
         return;
       }
+      audioPlay('audio/switch.mp3', volume);
       squares[place] = xIsNext ? 'X' : 'O';
       const winnerStreak = calculateWinner(squares, 0);
       const winner = winnerStreak ? squares[winnerStreak[0]] : null;
@@ -115,13 +115,13 @@ const Game = () => {
         setIsDraw(true);
       }
       setHistory(
-        history.concat([
+        newHistory.concat([
           {
             squares: squares,
           },
         ]),
       );
-      setStepNumber(history.length);
+      setStepNumber(newHistory.length);
       setXIsNext(!xIsNext);
       setIsMyTurn(true);
     },
@@ -129,12 +129,32 @@ const Game = () => {
   );
 
   useEffect(() => {
-    if (socket && !isMyTurn) {
+    if (socket) {
       socket.addEventListener('message', (m) => {
         const json = JSON.parse(m.data);
+        const type = json.type;
         console.log(json);
 
-        handleMassage(json.col);
+        switch (type) {
+          case 'init':
+            if (json.opponent) {
+              console.log('game start!');
+              setIsEnter(true);
+              setIsMyTurn(json.isYourTurn);
+            } else {
+              setIsMyTurn(false);
+              console.log('waiting opponent player...');
+            }
+            break;
+          case 'set':
+            handleMassage(json.col);
+            break;
+          case 'end':
+            socket.close();
+            break;
+          default:
+            break;
+        }
       });
     }
   }, [isMyTurn, socket, handleMassage]);
@@ -154,14 +174,14 @@ const Game = () => {
     const ws = new WebSocket(SERVER_URL);
     ws.addEventListener('open', (e) => {
       console.log('get connection with server!');
-      ws.send(JSON.stringify({ roomId: id }));
+      ws.send(JSON.stringify({ type: 'init', roomId: id }));
     });
-    setIsEnter(true);
-    setIsMyTurn(false); //test
     setSocket(ws);
   };
 
+  // maybe server problems
   const current = history[stepNumber];
+  console.log(current);
   const winner_streak = calculateWinner(current.squares, 0);
   const winner = winner_streak ? current.squares[winner_streak[0]] : null;
 
@@ -194,6 +214,7 @@ const Game = () => {
       <button disabled={isMyTurn} onClick={() => connectWebsocket(345)}>
         connectWebsocket
       </button>
+      <p>{isMyTurn ? 'YOUR TURN' : 'WAIT OPPONENT TURN or NOT REMOTE GAME'}</p>
     </div>
   );
 };
