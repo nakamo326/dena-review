@@ -37,19 +37,19 @@ class Game extends React.Component {
       return;
     }
     squares[place] = this.state.xIsNext ? 'X' : 'O';
-    if (this.state.stepNumber === 41)
-      this.setState({
-        isDraw: true,
-      });
 
-    const winner_streak = calculateWinner(squares, 0);
-    const winner = winner_streak ? squares[winner_streak[0]] : null;
-    if (winner_streak) {
+    const winnerStreak = calculateWinner(squares, 0);
+    const winner = winnerStreak ? squares[winnerStreak[0]] : null;
+    if (winnerStreak) {
       for (let i = 0; i < squares.length; i++) {
-        const match = winner_streak.includes(i);
+        const match = winnerStreak.includes(i);
         squares[i] = match ? winner : null;
       }
     }
+    if (!winnerStreak && this.state.stepNumber === 41)
+      this.setState({
+        isDraw: true,
+      });
 
     this.setState({
       history: history.concat([
