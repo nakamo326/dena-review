@@ -41,36 +41,40 @@ const Game = () => {
     setVolume(newVolume);
   }, [volume]);
 
-  const handleClick = (i) => {
-    if (!isEnter || isDraw) return;
-    const newHistory = history.slice(0, stepNumber + 1);
-    const squares = newHistory[newHistory.length - 1].squares.slice();
-    const place = isPlaceable(squares, i);
-    if (calculateWinner(squares, 0) || place === null) {
-      return;
-    }
-    squares[place] = xIsNext ? 'X' : 'O';
-    const winnerStreak = calculateWinner(squares, 0);
-    const winner = winnerStreak ? squares[winnerStreak[0]] : null;
-    if (winnerStreak) {
-      for (let i = 0; i < squares.length; i++) {
-        const match = winnerStreak.includes(i);
-        squares[i] = match ? winner : null;
+  const handleClick = useCallback(
+    (i) => {
+      if (!isEnter || isDraw) return;
+      audioPlay('audio/switch.mp3', volume);
+      const newHistory = history.slice(0, stepNumber + 1);
+      const squares = newHistory[newHistory.length - 1].squares.slice();
+      const place = isPlaceable(squares, i);
+      if (calculateWinner(squares, 0) || place === null) {
+        return;
       }
-    }
-    if (!winnerStreak && stepNumber === 41) {
-      setIsDraw(true);
-    }
-    setHistory(
-      history.concat([
-        {
-          squares: squares,
-        },
-      ]),
-    );
-    setStepNumber(history.length);
-    setXIsNext(!xIsNext);
-  };
+      squares[place] = xIsNext ? 'X' : 'O';
+      const winnerStreak = calculateWinner(squares, 0);
+      const winner = winnerStreak ? squares[winnerStreak[0]] : null;
+      if (winnerStreak) {
+        for (let i = 0; i < squares.length; i++) {
+          const match = winnerStreak.includes(i);
+          squares[i] = match ? winner : null;
+        }
+      }
+      if (!winnerStreak && stepNumber === 41) {
+        setIsDraw(true);
+      }
+      setHistory(
+        history.concat([
+          {
+            squares: squares,
+          },
+        ]),
+      );
+      setStepNumber(history.length);
+      setXIsNext(!xIsNext);
+    },
+    [isEnter, isDraw, history, stepNumber, xIsNext, volume],
+  );
 
   const jumpTo = (step) => {
     setStepNumber(step);
@@ -127,13 +131,7 @@ const Game = () => {
       </div>
       <div className="game-body">
         <div className={'game-board' + (isEnter ? ' board-on' : '')}>
-          <Board
-            squares={current.squares}
-            onClick={(i) => {
-              if (isEnter) audioPlay('audio/switch.mp3', volume);
-              handleClick(i);
-            }}
-          />
+          <Board squares={current.squares} onClick={handleClick} />
         </div>
       </div>
       <input type="text" name="roomId" placeholder="Enter" />
@@ -144,5 +142,4 @@ const Game = () => {
 };
 
 // ========================================
-
 ReactDOM.render(<Game />, document.getElementById('root'));
