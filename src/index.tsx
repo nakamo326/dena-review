@@ -49,50 +49,48 @@ const Game = () => {
     setVolume(newVolume);
   }, [volume]);
 
-  const handleClick = useCallback(
-    (i) => {
-      console.log('call handleClick!');
-      if (!isEnter || isDraw || (socket && !isMyTurn)) {
-        audioPlay('audio/disable.mp3', volume);
-        console.log('but return..');
-        return;
+  const handleClick = (i: number) => {
+    console.log('call handleClick!');
+    if (!isEnter || isDraw || (socket && !isMyTurn)) {
+      audioPlay('audio/disable.mp3', volume);
+      console.log('but return..');
+      return;
+    }
+    const newHistory = history.slice(0, stepNumber + 1);
+    const current = newHistory[newHistory.length - 1];
+    const squares = current.squares.slice();
+    const place = isPlaceable(squares, i);
+    if (calculateWinner(squares, 0) || place === null) {
+      return;
+    }
+    audioPlay('audio/switch.mp3', volume);
+    squares[place] = xIsNext ? 'X' : 'O';
+    const winnerStreak = calculateWinner(squares, 0);
+    const winner = winnerStreak ? squares[winnerStreak[0]] : null;
+    if (winnerStreak) {
+      for (let i = 0; i < squares.length; i++) {
+        const match = winnerStreak.includes(i);
+        squares[i] = match ? winner : null;
       }
-      const newHistory = history.slice(0, stepNumber + 1);
-      const current = newHistory[newHistory.length - 1];
-      const squares = current.squares.slice();
-      const place = isPlaceable(squares, i);
-      if (calculateWinner(squares, 0) || place === null) {
-        return;
-      }
-      audioPlay('audio/switch.mp3', volume);
-      // if (socket && isMyTurn) {
-      //   socket.send(JSON.stringify({ type: 'set', col: i }));
-      //   setIsMyTurn(false);
-      // }
-      squares[place] = xIsNext ? 'X' : 'O';
-      const winnerStreak = calculateWinner(squares, 0);
-      const winner = winnerStreak ? squares[winnerStreak[0]] : null;
-      if (winnerStreak) {
-        for (let i = 0; i < squares.length; i++) {
-          const match = winnerStreak.includes(i);
-          squares[i] = match ? winner : null;
-        }
-      }
-      if (!winnerStreak && stepNumber === 41) {
-        setIsDraw(true);
-      }
-      setHistory(
-        newHistory.concat([
-          {
-            squares: squares,
-          },
-        ]),
-      );
-      setStepNumber(newHistory.length);
-      setXIsNext(!xIsNext);
-    },
-    [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
-  );
+    }
+    if (!winnerStreak && stepNumber === 41) {
+      setIsDraw(true);
+    }
+    setHistory(
+      newHistory.concat([
+        {
+          squares: squares,
+        },
+      ]),
+    );
+    setStepNumber(newHistory.length);
+    setXIsNext(!xIsNext);
+    if (socket) {
+      socket.emit('set', JSON.stringify({ userId: userId, col: i }));
+      setIsMyTurn(false);
+      setStatus('Wait opponent turn...');
+    }
+  };
 
   // const handleMassage = useCallback(
   //   (i) => {
@@ -204,7 +202,6 @@ const Game = () => {
       <button disabled={socket ? true : false} onClick={() => connectSocket('345')}>
         connectWebsocket
       </button>
-      <p>{isMyTurn ? 'YOUR TURN' : 'WAIT OPPONENT TURN or NOT REMOTE GAME'}</p>
       <p>{status}</p>
       <div className="game-body">
         <div className={'game-board' + (isEnter ? ' board-on' : '')}>
