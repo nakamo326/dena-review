@@ -3,7 +3,7 @@ import '../index.css';
 
 type VolumeProps = {
   volume: number;
-  onClick: () =>  void;
+  onClick: () => void;
 };
 
 const Volume = React.memo((props: VolumeProps) => {

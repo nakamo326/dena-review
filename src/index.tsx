@@ -1,41 +1,20 @@
-import React, { useCallback, useState } from 'react';
-import { io,Socket } from 'socket.io-client';
+import React, { useCallback, useState, useEffect } from 'react';
+import { Socket } from 'socket.io-client';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './mobile.css';
+import './components/remotePlay.d.ts';
 
 import Title from './components/title';
 import Indicator from './components/indicator';
 import Volume from './components/volume';
 import Board from './components/board';
 import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
+import { enterRoom } from './components/remotePlay';
 
 // socket timeout check
 
-interface ServerToClientEvents {
-  noArg: () => void;
-  basicEmit: (a: number, b: string, c: Buffer) => void;
-  withAck: (d: string, callback: (e: number) => void) => void;
-}
-
-interface ClientToServerEvents {
-  hello: () => void;
-}
-
-// eslint-disable-next-line
-interface InterServerEvents {
-  ping: () => void;
-}
-
-// eslint-disable-next-line
-interface SocketData {
-  name: string;
-  age: number;
-}
-
 const Game = () => {
-  //const SERVER_URL = 'wss://murmuring-lowlands-58469.herokuapp.com';
-  const SERVER_URL = 'localhost:3001';
   const [history, setHistory] = useState([
     {
       squares: Array(42).fill(null),
@@ -46,9 +25,12 @@ const Game = () => {
   const [isEnter, setIsEnter] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
   const [volume, setVolume] = useState(0.5);
-  const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents> | null >(null);
-  // const [isMyTurn, setIsMyTurn] = useState(false);
-  const [isMyTurn] = useState(false);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isMyTurn, setIsMyTurn] = useState(false);
+  const [userId, setUserId] = useState('');
+  // eslint-disable-next-line
+  const [roomId, setRoomId] = useState('');
+  const [status, setStatus] = useState('');
 
   const toggleVolume = useCallback(() => {
     audioPlay('audio/switch.mp3', volume);
@@ -76,7 +58,7 @@ const Game = () => {
         return;
       }
       const newHistory = history.slice(0, stepNumber + 1);
-      const current = newHistory[newHistory.length - 1]
+      const current = newHistory[newHistory.length - 1];
       const squares = current.squares.slice();
       const place = isPlaceable(squares, i);
       if (calculateWinner(squares, 0) || place === null) {
@@ -153,37 +135,25 @@ const Game = () => {
   //   [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
   // );
 
-  // useEffect(() => {
-  //   if (socket) {
-  //     socket.addEventListener('message', (m) => {
-  //       const json = JSON.parse(m.data);
-  //       const type = json.type;
-  //       console.log(json);
-
-  //       switch (type) {
-  //         case 'init':
-  //           if (json.opponent) {
-  //             console.log('game start!');
-  //             setIsEnter(true);
-  //             setIsMyTurn(json.isYourTurn);
-  //           } else {
-  //             setIsMyTurn(false);
-  //             console.log('waiting opponent player...');
-  //           }
-  //           break;
-  //         case 'set':
-  //           // check message
-  //           handleMassage(json.col);
-  //           break;
-  //         case 'end':
-  //           socket.close();
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //     });
-  //   }
-  // }, [isMyTurn, socket, handleMassage]);
+  useEffect(() => {
+    if (socket) {
+      socket.on('init', (msg: string) => {
+        const json = JSON.parse(msg);
+        console.log(json);
+        console.log('got socket!');
+        setIsMyTurn(json.isYourTurn);
+        setUserId(json.userId);
+        setRoomId(json.roomId);
+        setIsEnter(true);
+        if (json.opponentPlayer) {
+          if (isMyTurn) setStatus('game start! its your turn!');
+          else setStatus('game start! wait opponent turn...');
+        } else {
+          setStatus('waiting opponent player...');
+        }
+      });
+    }
+  }, [isMyTurn, socket, userId, isEnter]);
 
   const jumpTo = (step: number) => {
     setStepNumber(step);
@@ -196,13 +166,14 @@ const Game = () => {
     jumpTo(0);
   };
 
-  const connectSocket = (id: number) => {
-    const socket = io(SERVER_URL, { transports : ['websocket'] });
-    socket.on('connect', () => {
-      console.log('get connection with server!');
-      socket.send(JSON.stringify({ type: 'init', roomId: id }));
-    });
-    setSocket(socket);
+  const connectSocket = (id: string) => {
+    const socket = enterRoom(id);
+    console.log(socket);
+    if (socket) {
+      console.log('got socket!');
+      setSocket(socket);
+      setStatus(`waiting room init...`);
+    }
   };
 
   const current = history[stepNumber];
@@ -229,16 +200,17 @@ const Game = () => {
           入場 ☞
         </button>
       </div>
+      <input type="text" name="roomId" placeholder="Enter" />
+      <button disabled={socket ? true : false} onClick={() => connectSocket('345')}>
+        connectWebsocket
+      </button>
+      <p>{isMyTurn ? 'YOUR TURN' : 'WAIT OPPONENT TURN or NOT REMOTE GAME'}</p>
+      <p>{status}</p>
       <div className="game-body">
         <div className={'game-board' + (isEnter ? ' board-on' : '')}>
           <Board squares={current.squares} onClick={handleClick} />
         </div>
       </div>
-      <input type="text" name="roomId" placeholder="Enter" />
-      <button disabled={isMyTurn} onClick={() => connectSocket(345)}>
-        connectWebsocket
-      </button>
-      <p>{isMyTurn ? 'YOUR TURN' : 'WAIT OPPONENT TURN or NOT REMOTE GAME'}</p>
     </div>
   );
 };
