@@ -28,7 +28,6 @@ const Game = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isMyTurn, setIsMyTurn] = useState(false);
   const [userId, setUserId] = useState('');
-  // eslint-disable-next-line
   const [roomId, setRoomId] = useState('');
   const [status, setStatus] = useState('');
 
@@ -57,8 +56,7 @@ const Game = () => {
       return;
     }
     const newHistory = history.slice(0, stepNumber + 1);
-    const current = newHistory[newHistory.length - 1];
-    const squares = current.squares.slice();
+    const squares = newHistory[newHistory.length - 1].squares.slice();
     const place = isPlaceable(squares, i);
     if (calculateWinner(squares, 0) || place === null) {
       return;
@@ -86,52 +84,53 @@ const Game = () => {
     setStepNumber(newHistory.length);
     setXIsNext(!xIsNext);
     if (socket) {
-      socket.emit('set', JSON.stringify({ userId: userId, col: i }));
+      socket.emit('set', JSON.stringify({ roomId: roomId, userId: userId, col: i }));
       setIsMyTurn(false);
       setStatus('Wait opponent turn...');
     }
   };
 
-  // const handleMassage = useCallback(
-  //   (i) => {
-  //     console.log('call handleMessage!');
-  //     if (!isEnter || isDraw || (socket && isMyTurn)) {
-  //       audioPlay('audio/disable.mp3', volume);
-  //       console.log('but return..');
-  //       return;
-  //     }
-  //     const newHistory = history.slice(0, stepNumber + 1);
-  //     const squares = newHistory[newHistory.length - 1].squares.slice();
-  //     const place = isPlaceable(squares, i);
-  //     if (calculateWinner(squares, 0) || !place) {
-  //       return;
-  //     }
-  //     audioPlay('audio/switch.mp3', volume);
-  //     squares[place] = xIsNext ? 'X' : 'O';
-  //     const winnerStreak = calculateWinner(squares, 0);
-  //     const winner = winnerStreak ? squares[winnerStreak[0]] : null;
-  //     if (winnerStreak) {
-  //       for (let i = 0; i < squares.length; i++) {
-  //         const match = winnerStreak.includes(i);
-  //         squares[i] = match ? winner : null;
-  //       }
-  //     }
-  //     if (!winnerStreak && stepNumber === 41) {
-  //       setIsDraw(true);
-  //     }
-  //     setHistory(
-  //       newHistory.concat([
-  //         {
-  //           squares: squares,
-  //         },
-  //       ]),
-  //     );
-  //     setStepNumber(newHistory.length);
-  //     setXIsNext(!xIsNext);
-  //     setIsMyTurn(true);
-  //   },
-  //   [isMyTurn, isEnter, isDraw, history, stepNumber, xIsNext, volume, socket],
-  // );
+  const handleMessage = useCallback(
+    (i: number) => {
+      console.log('call handleMessage!');
+      if (!isEnter || isDraw || (socket && isMyTurn)) {
+        audioPlay('audio/disable.mp3', volume);
+        console.log('but return..');
+        return;
+      }
+      const newHistory = history.slice(0, stepNumber + 1);
+      const squares = newHistory[newHistory.length - 1].squares.slice();
+      const place = isPlaceable(squares, i);
+      if (calculateWinner(squares, 0) || place === null) {
+        return;
+      }
+      audioPlay('audio/switch.mp3', volume);
+      squares[place] = xIsNext ? 'X' : 'O';
+      const winnerStreak = calculateWinner(squares, 0);
+      const winner = winnerStreak ? squares[winnerStreak[0]] : null;
+      if (winnerStreak) {
+        for (let i = 0; i < squares.length; i++) {
+          const match = winnerStreak.includes(i);
+          squares[i] = match ? winner : null;
+        }
+      }
+      if (!winnerStreak && stepNumber === 41) {
+        setIsDraw(true);
+      }
+      setHistory(
+        newHistory.concat([
+          {
+            squares: squares,
+          },
+        ]),
+      );
+      setStepNumber(newHistory.length);
+      setXIsNext(!xIsNext);
+      setIsMyTurn(true);
+      setStatus('your turn!');
+    },
+    [history, isDraw, isEnter, isMyTurn, socket, stepNumber, volume, xIsNext],
+  );
 
   useEffect(() => {
     if (socket) {
@@ -142,16 +141,32 @@ const Game = () => {
         setIsMyTurn(json.isYourTurn);
         setUserId(json.userId);
         setRoomId(json.roomId);
-        setIsEnter(true);
         if (json.opponentPlayer) {
+          setIsEnter(true);
           if (isMyTurn) setStatus('game start! its your turn!');
           else setStatus('game start! wait opponent turn...');
         } else {
           setStatus('waiting opponent player...');
         }
       });
+
+      socket.on('set', (msg: string) => {
+        const json = JSON.parse(msg);
+        console.log(json);
+        if (json.userId === userId) {
+          console.log('got return my emit!');
+          return;
+        }
+        handleMessage(json.col);
+      });
+
+      socket.on('start', () => {
+        setIsEnter(true);
+        if (isMyTurn) setStatus('game start! its your turn!');
+        else setStatus('game start! wait opponent turn...');
+      });
     }
-  }, [isMyTurn, socket, userId, isEnter]);
+  }, [isMyTurn, socket, userId, isEnter, handleMessage]);
 
   const jumpTo = (step: number) => {
     setStepNumber(step);

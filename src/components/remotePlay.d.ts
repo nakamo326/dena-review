@@ -8,7 +8,7 @@ interface ClientToServerEvents {
   hello: () => void;
 }
 
-interface initJson {
+interface roomReq {
   userId: string;
   roomId: string;
   opponentPlayer: boolean;
