@@ -1,5 +1,5 @@
-// import React, { useCallback, useEffect, useState } from 'react';
 import React, { useCallback, useState } from 'react';
+import { io,Socket } from 'socket.io-client';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './mobile.css';
@@ -12,8 +12,30 @@ import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
 
 // socket timeout check
 
+interface ServerToClientEvents {
+  noArg: () => void;
+  basicEmit: (a: number, b: string, c: Buffer) => void;
+  withAck: (d: string, callback: (e: number) => void) => void;
+}
+
+interface ClientToServerEvents {
+  hello: () => void;
+}
+
+// eslint-disable-next-line
+interface InterServerEvents {
+  ping: () => void;
+}
+
+// eslint-disable-next-line
+interface SocketData {
+  name: string;
+  age: number;
+}
+
 const Game = () => {
-  // const SERVER_URL = 'wss://murmuring-lowlands-58469.herokuapp.com';
+  //const SERVER_URL = 'wss://murmuring-lowlands-58469.herokuapp.com';
+  const SERVER_URL = 'localhost:3001';
   const [history, setHistory] = useState([
     {
       squares: Array(42).fill(null),
@@ -24,8 +46,7 @@ const Game = () => {
   const [isEnter, setIsEnter] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
   const [volume, setVolume] = useState(0.5);
-  //const [socket, setSocket] = useState(null);
-  const [socket] = useState(null);
+  const [socket, setSocket] = useState<Socket<ServerToClientEvents, ClientToServerEvents> | null >(null);
   // const [isMyTurn, setIsMyTurn] = useState(false);
   const [isMyTurn] = useState(false);
 
@@ -175,18 +196,16 @@ const Game = () => {
     jumpTo(0);
   };
 
-  // const connectWebsocket = (id: number) => {
-  //   const ws = new WebSocket(SERVER_URL);
-  //   ws.addEventListener('open', (e) => {
-  //     console.log('get connection with server!');
-  //     ws.send(JSON.stringify({ type: 'init', roomId: id }));
-  //   });
-  //   setSocket(ws);
-  // };
+  const connectSocket = (id: number) => {
+    const socket = io(SERVER_URL, { transports : ['websocket'] });
+    socket.on('connect', () => {
+      console.log('get connection with server!');
+      socket.send(JSON.stringify({ type: 'init', roomId: id }));
+    });
+    setSocket(socket);
+  };
 
-  // maybe server problems
   const current = history[stepNumber];
-  console.log(current);
   const winner_streak = calculateWinner(current.squares, 0);
   const winner = winner_streak ? current.squares[winner_streak[0]] : null;
 
@@ -216,9 +235,9 @@ const Game = () => {
         </div>
       </div>
       <input type="text" name="roomId" placeholder="Enter" />
-      {/* <button disabled={isMyTurn} onClick={() => connectWebsocket(345)}>
+      <button disabled={isMyTurn} onClick={() => connectSocket(345)}>
         connectWebsocket
-      </button> */}
+      </button>
       <p>{isMyTurn ? 'YOUR TURN' : 'WAIT OPPONENT TURN or NOT REMOTE GAME'}</p>
     </div>
   );

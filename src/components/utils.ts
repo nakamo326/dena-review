@@ -2,8 +2,7 @@
 export function isPlaceable(squares: Array<string>, col: number) {
   for (let row = 5; row >= 0; row--) {
     const index = row * 7 + col;
-    if (squares[index] === null){
-      console.log(index);
+    if (squares[index] === null) {
       return index;
     }
   }
@@ -24,9 +23,7 @@ export function calculateWinner(squares: Array<string>, index: number): Array<nu
     [1, 1],
   ];
 
-  if (index === 42) {
-    return null;
-  }
+  if (index === 42) return null;
   if (squares[index] !== null) {
     for (let i = 0; i < 8; i++) {
       const line = [
@@ -76,9 +73,3 @@ export function audioPlay(path: string, volume: number) {
     })
     .catch((error) => console.warn(error));
 }
-
-// ArrayBuffer から文字列への変換
-
-// export function buffer_to_string(buf: any) {
-//   return String.fromCharCode.apply('', new Uint16Array(buf));
-// }
