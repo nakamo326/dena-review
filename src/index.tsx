@@ -64,15 +64,11 @@ const Game = () => {
     setXIsNext(!xIsNext);
   };
 
-  const jumpTo = (step: number) => {
-    setStepNumber(step);
-    setXIsNext(step % 2 === 0);
-  };
-
   const resetGame = () => {
     audioPlay('audio/switch.mp3', volume);
     setIsDraw(false);
-    jumpTo(0);
+    setStepNumber(0);
+    setXIsNext(true);
   };
 
   const current = history[stepNumber];
