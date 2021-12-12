@@ -7,6 +7,7 @@ import Title from './components/title';
 import Indicator from './components/indicator';
 import Volume from './components/volume';
 import Board from './components/board';
+import { useStepNumber } from './components/useStepNumber';
 import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
 
 // socket timeout check
@@ -18,10 +19,9 @@ const Game = () => {
     },
   ]);
   const [volume, setVolume] = useState(0.5);
-  const [stepNumber, setStepNumber] = useState(0);
-  const [xIsNext, setXIsNext] = useState(true);
   const [isEnter, setIsEnter] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
+  const [stepNumber, xIsNext, incStepNumber, updateStepNumber] = useStepNumber();
 
   const handleClick = (i: number) => {
     console.log('call handleClick!');
@@ -60,15 +60,13 @@ const Game = () => {
         },
       ]),
     );
-    setStepNumber(newHistory.length);
-    setXIsNext(!xIsNext);
+    incStepNumber();
   };
 
   const resetGame = () => {
     audioPlay('audio/switch.mp3', volume);
     setIsDraw(false);
-    setStepNumber(0);
-    setXIsNext(true);
+    updateStepNumber(0);
   };
 
   const current = history[stepNumber];
