@@ -1,5 +1,5 @@
 //  return placeable index number, or return null if stone is full on col
-export function isPlaceable(squares: Array<string>, col: number) {
+export function isPlaceable(squares: Array<string>, col: number): number | null {
   for (let row = 5; row >= 0; row--) {
     const index = row * 7 + col;
     if (squares[index] === null) {
@@ -63,7 +63,7 @@ function isOverRun(dir: number, array: Array<number>) {
   return true;
 }
 
-export function audioPlay(path: string, volume: number) {
+export function audioPlay(path: string, volume: number): void {
   const audio = new Audio(path);
   audio.volume = volume;
   audio

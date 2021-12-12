@@ -7,7 +7,7 @@ type DataProps = {
   winner: string | null;
 };
 
-const Indicator = (props: DataProps) => {
+const Indicator = (props: DataProps): JSX.Element => {
   let status;
   let left: string | null = null;
   let right: string | null = null;
