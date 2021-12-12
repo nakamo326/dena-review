@@ -64,7 +64,7 @@ const Game = () => {
     audioPlay('audio/switch.mp3', volume);
     squares[place] = xIsNext ? 'X' : 'O';
     console.log(squares);
-    console.log('stepnumber: ' + stepNumber);
+    console.log('step number: ' + stepNumber);
     const winnerStreak = calculateWinner(squares, 0);
     const winner = winnerStreak ? squares[winnerStreak[0]] : null;
     if (winnerStreak) {

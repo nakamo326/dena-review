@@ -6,7 +6,7 @@ type VolumeProps = {
   onClick: () => void;
 };
 
-const Volume = React.memo((props: VolumeProps) => {
+const Volume = React.memo(function showVolume(props: VolumeProps) {
   if (props.volume === 1) {
     return (
       <div className="volume">

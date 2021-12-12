@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Title = React.memo(() => {
+const Title = React.memo(function showTitle() {
   return (
     <div className="game-title">
       <span className="neon flash">

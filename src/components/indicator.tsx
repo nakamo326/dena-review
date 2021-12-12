@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Stone from './stone';
 
 type DataProps = {
@@ -7,11 +7,10 @@ type DataProps = {
   winner: string | null;
 };
 
-const Indicator = React.memo((props: DataProps) => {
-  const voidFunc = useCallback(() => {}, []);
+const Indicator = (props: DataProps) => {
   let status;
   let left: string | null = null;
-  let right: string | null  = null;
+  let right: string | null = null;
   if (props.winner) {
     status = props.winner;
   } else {
@@ -26,10 +25,18 @@ const Indicator = React.memo((props: DataProps) => {
   }
   return (
     <div className="indicator">
-      <Stone value={left} onClick={voidFunc}></Stone>
-      <Stone value={right} onClick={voidFunc}></Stone>
+      <Stone
+        value={left}
+        onClick={() => {
+          return;
+        }}></Stone>
+      <Stone
+        value={right}
+        onClick={() => {
+          return;
+        }}></Stone>
     </div>
   );
-});
+};
 
 export default Indicator;
