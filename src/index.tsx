@@ -63,6 +63,8 @@ const Game = () => {
     }
     audioPlay('audio/switch.mp3', volume);
     squares[place] = xIsNext ? 'X' : 'O';
+    console.log(squares);
+    console.log('stepnumber: ' + stepNumber);
     const winnerStreak = calculateWinner(squares, 0);
     const winner = winnerStreak ? squares[winnerStreak[0]] : null;
     if (winnerStreak) {
@@ -71,9 +73,11 @@ const Game = () => {
         squares[i] = match ? winner : null;
       }
     }
+    let newIsDraw = false;
     if (!winnerStreak && stepNumber === 41) {
-      setIsDraw(true);
+      newIsDraw = true;
     }
+    setIsDraw(newIsDraw);
     setHistory(
       newHistory.concat([
         {
@@ -83,11 +87,13 @@ const Game = () => {
     );
     setStepNumber(newHistory.length);
     setXIsNext(!xIsNext);
+    let newStatus = '';
     if (socket) {
       socket.emit('set', JSON.stringify({ roomId: roomId, userId: userId, col: i }));
-      setIsMyTurn(false);
-      setStatus('Wait opponent turn...');
+      newStatus = 'Wait opponent turn...';
     }
+    setIsMyTurn(false);
+    setStatus(newStatus);
   };
 
   const handleMessage = useCallback(
@@ -114,9 +120,11 @@ const Game = () => {
           squares[i] = match ? winner : null;
         }
       }
+      let newIsDraw = false;
       if (!winnerStreak && stepNumber === 41) {
-        setIsDraw(true);
+        newIsDraw = true;
       }
+      setIsDraw(newIsDraw);
       setHistory(
         newHistory.concat([
           {
@@ -166,7 +174,7 @@ const Game = () => {
         else setStatus('game start! wait opponent turn...');
       });
     }
-  }, [isMyTurn, socket, userId, isEnter, handleMessage]);
+  }, [isMyTurn, socket, userId, isEnter, handleMessage, stepNumber]);
 
   const jumpTo = (step: number) => {
     setStepNumber(step);
