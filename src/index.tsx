@@ -31,23 +31,6 @@ const Game = () => {
   const [roomId, setRoomId] = useState('');
   const [status, setStatus] = useState('');
 
-  const toggleVolume = useCallback(() => {
-    audioPlay('audio/switch.mp3', volume);
-    let newVolume;
-    switch (volume) {
-      case 1:
-        newVolume = 0.5;
-        break;
-      case 0.5:
-        newVolume = 0;
-        break;
-      default:
-        newVolume = 1;
-        break;
-    }
-    setVolume(newVolume);
-  }, [volume]);
-
   const handleClick = (i: number) => {
     console.log('call handleClick!');
     if (!isEnter || isDraw || (socket && !isMyTurn)) {
@@ -209,7 +192,7 @@ const Game = () => {
         <button className="reset-button" onClick={resetGame}>
           RESET
         </button>
-        <Volume volume={volume} onClick={toggleVolume} />
+        <Volume volume={volume} setVolume={setVolume} />
         <button
           className="enter-button"
           onClick={() => {
