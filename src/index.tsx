@@ -33,17 +33,17 @@ const Game = () => {
     squares[place] = xIsNext ? 'X' : 'O';
     console.log(squares);
     console.log('step number: ' + stepNumber);
-    const winnerStreak = calculateWinner(squares, 0);
-    const winner = winnerStreak ? squares[winnerStreak[0]] : null;
-    if (winnerStreak) {
+    const winStreak = calculateWinner(squares, 0);
+    const winner = winStreak ? squares[winStreak[0]] : null;
+    if (winStreak) {
       for (let i = 0; i < squares.length; i++) {
-        const match = winnerStreak.includes(i);
+        const match = winStreak.includes(i);
         squares[i] = match ? winner : null;
       }
     }
     newHistory.push(squares);
     let newIsDraw = false;
-    if (!winnerStreak && stepNumber === 41) {
+    if (!winStreak && stepNumber === 41) {
       newIsDraw = true;
     }
     setIsDraw(newIsDraw);
@@ -58,8 +58,8 @@ const Game = () => {
   };
 
   const current = history[stepNumber];
-  const winner_streak = calculateWinner(current, 0);
-  const winner = winner_streak ? current[winner_streak[0]] : null;
+  const winStreak = calculateWinner(current, 0);
+  const winner = winStreak ? current[winStreak[0]] : null;
 
   return (
     <div className="game">
