@@ -20,25 +20,20 @@ const Game = () => {
   const [stepNumber, xIsNext, incStepNumber, updateStepNumber] = useStepNumber();
 
   const handleClick = (i: number) => {
-    console.log('call handleClick!');
     const newHistory = history.slice(0, stepNumber + 1);
     const squares = newHistory[newHistory.length - 1].slice();
     const place = isPlaceable(squares, i);
     if (!isEnter || isDraw || calculateWinner(squares, 0) || place === null) {
       audioPlay('audio/disable.mp3', volume);
-      console.log('but return..');
       return;
     }
     audioPlay('audio/switch.mp3', volume);
     squares[place] = xIsNext ? 'X' : 'O';
-    console.log(squares);
-    console.log('step number: ' + stepNumber);
     const winStreak = calculateWinner(squares, 0);
     const winner = winStreak ? squares[winStreak[0]] : null;
     if (winStreak) {
       for (let i = 0; i < squares.length; i++) {
-        const match = winStreak.includes(i);
-        squares[i] = match ? winner : null;
+        squares[i] = winStreak.includes(i) ? winner : null;
       }
     }
     newHistory.push(squares);
