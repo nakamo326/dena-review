@@ -10,8 +10,6 @@ import Board from './components/board';
 import { useStepNumber } from './components/useStepNumber';
 import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
 
-// socket timeout check
-
 const Game = () => {
   const [history, setHistory] = useState([Array(42).fill(null)]);
   const [volume, setVolume] = useState(0.5);
