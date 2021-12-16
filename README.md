@@ -6,6 +6,8 @@ Four-in-a-row game for public review event
 
 ## Overview
 
+### Live Preview is [Here](https://nakamo326.github.io/dena-review/)!
+
 This web application is a Four in a row made using react.
 
 ## Requirements
@@ -16,5 +18,4 @@ yarn 1.22.17
 
 ## Usage
 
-Live Preview is [Here](https://nakamo326.github.io/dena-review/)!\
 if you want to test local, use `yarn && yarn start`.
