@@ -63,6 +63,15 @@ function isOverRun(dir: number, array: Array<number>) {
   return true;
 }
 
+export function makeWinSquares(squares: Array<string | null>, winStreak: number[] | null) {
+  const winner = winStreak ? squares[winStreak[0]] : null;
+  if (winStreak) {
+    for (let i = 0; i < squares.length; i++) {
+      squares[i] = winStreak.includes(i) ? winner : null;
+    }
+  }
+}
+
 export function audioPlay(path: string, volume: number): void {
   const audio = new Audio(path);
   audio.volume = volume;

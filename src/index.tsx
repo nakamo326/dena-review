@@ -8,7 +8,7 @@ import Indicator from './components/indicator';
 import Volume from './components/volume';
 import Board from './components/board';
 import { useStepNumber } from './components/useStepNumber';
-import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
+import { isPlaceable, calculateWinner, audioPlay, makeWinSquares } from './components/utils';
 
 const Game = () => {
   const [history, setHistory] = useState([Array(42).fill(null)]);
@@ -28,17 +28,9 @@ const Game = () => {
     audioPlay('audio/switch.mp3', volume);
     squares[place] = xIsNext ? 'X' : 'O';
     const winStreak = calculateWinner(squares, 0);
-    const winner = winStreak ? squares[winStreak[0]] : null;
-    if (winStreak) {
-      for (let i = 0; i < squares.length; i++) {
-        squares[i] = winStreak.includes(i) ? winner : null;
-      }
-    }
+    makeWinSquares(squares, winStreak);
     newHistory.push(squares);
-    let newIsDraw = false;
-    if (!winStreak && stepNumber === 41) {
-      newIsDraw = true;
-    }
+    const newIsDraw = !winStreak && stepNumber === 41 ? true : false;
     setIsDraw(newIsDraw);
     setHistory(newHistory);
     incStepNumber();
