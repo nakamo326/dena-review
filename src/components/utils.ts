@@ -73,3 +73,13 @@ export function audioPlay(path: string, volume: number): void {
     })
     .catch((error) => console.warn(error));
 }
+
+// if there are winstreak, turn off any other stone.
+export function updateSquares(winStreak: number[] | null, squares: Array<string | null>): void {
+  const winner = winStreak ? squares[winStreak[0]] : null;
+  if (winStreak) {
+    for (let i = 0; i < squares.length; i++) {
+      squares[i] = winStreak.includes(i) ? winner : null;
+    }
+  }
+}
