@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Socket } from 'socket.io-client';
 import './index.css';
 import './mobile.css';
 
@@ -9,6 +10,7 @@ import Volume from './components/volume';
 import Board from './components/board';
 import { useStepNumber } from './components/useStepNumber';
 import { isPlaceable, calculateWinner, audioPlay } from './components/utils';
+import { enterRoom } from './components/remotePlay';
 
 const Game = () => {
   const [history, setHistory] = useState([Array(42).fill(null)]);
@@ -16,6 +18,7 @@ const Game = () => {
   const [isEnter, setIsEnter] = useState(false);
   const [isDraw, setIsDraw] = useState(false);
   const [stepNumber, xIsNext, incStepNumber, updateStepNumber] = useStepNumber();
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   const handleClick = (i: number) => {
     const newHistory = history.slice(0, stepNumber + 1);
@@ -50,6 +53,12 @@ const Game = () => {
     updateStepNumber(0);
   };
 
+  const connectSocket = (id: string) => {
+    const socket = enterRoom(id);
+    console.log(socket);
+    setSocket(socket);
+  };
+
   const current = history[stepNumber];
   const winStreak = calculateWinner(current, 0);
   const winner = winStreak ? current[winStreak[0]] : null;
@@ -74,6 +83,10 @@ const Game = () => {
           入場 ☞
         </button>
       </div>
+      <input type="text" name="roomId" placeholder="Enter" />
+      <button disabled={socket ? true : false} onClick={() => connectSocket('345')}>
+        connectWebsocket
+      </button>
       <div className="game-body">
         <div className={'game-board' + (isEnter ? ' board-on' : '')}>
           <Board squares={current} onClick={handleClick} />

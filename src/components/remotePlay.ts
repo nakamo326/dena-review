@@ -1,5 +1,4 @@
 import { io, Socket } from 'socket.io-client';
-import './remotePlay.d.ts';
 
 // export const SERVER_URL = 'wss://murmuring-lowlands-58469.herokuapp.com';
 export const SERVER_URL = 'localhost:3001';
