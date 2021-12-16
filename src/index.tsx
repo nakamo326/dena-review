@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { Socket } from 'socket.io-client';
 import './index.css';
@@ -11,6 +11,7 @@ import Board from './components/board';
 import { useStepNumber } from './components/useStepNumber';
 import { isPlaceable, calculateWinner, audioPlay, updateSquares } from './components/utils';
 import { enterRoom } from './components/remotePlay';
+import { roomAns, useRoom } from './components/useRoom';
 
 const Game = () => {
   const [history, setHistory] = useState([Array(42).fill(null)]);
@@ -19,25 +20,83 @@ const Game = () => {
   const [isDraw, setIsDraw] = useState(false);
   const [stepNumber, xIsNext, incStepNumber, updateStepNumber] = useStepNumber();
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [roomInfo, roomInit, setIsMyTurn] = useRoom();
+
+  const handleSetStone = useCallback(
+    (i: number): boolean => {
+      const newHistory = history.slice(0, stepNumber + 1);
+      const squares = newHistory[newHistory.length - 1].slice();
+      const place = isPlaceable(squares, i);
+      if (!isEnter || isDraw || calculateWinner(squares, 0) || place === null) {
+        return false;
+      }
+      squares[place] = xIsNext ? 'X' : 'O';
+      const winStreak = calculateWinner(squares, 0);
+      updateSquares(winStreak, squares);
+      newHistory.push(squares);
+      const newIsDraw = !winStreak && stepNumber === 41 ? true : false;
+      setIsDraw(newIsDraw);
+      setHistory(newHistory);
+      incStepNumber();
+      return true;
+    },
+    [history, incStepNumber, isDraw, isEnter, stepNumber, xIsNext],
+  );
 
   const handleClick = (i: number) => {
-    const newHistory = history.slice(0, stepNumber + 1);
-    const squares = newHistory[newHistory.length - 1].slice();
-    const place = isPlaceable(squares, i);
-    if (!isEnter || isDraw || calculateWinner(squares, 0) || place === null) {
+    if ((socket && !roomInfo.isMyTurn) || !handleSetStone(i)) {
       audioPlay('audio/disable.mp3', volume);
       return;
     }
     audioPlay('audio/switch.mp3', volume);
-    squares[place] = xIsNext ? 'X' : 'O';
-    const winStreak = calculateWinner(squares, 0);
-    updateSquares(winStreak, squares);
-    newHistory.push(squares);
-    const newIsDraw = !winStreak && stepNumber === 41 ? true : false;
-    setIsDraw(newIsDraw);
-    setHistory(newHistory);
-    incStepNumber();
+    setIsMyTurn(false);
+    if (socket) {
+      socket.emit(
+        'set',
+        JSON.stringify({ roomId: roomInfo.roomId, userId: roomInfo.userId, col: i }),
+      );
+    }
   };
+
+  const handleMessage = useCallback(
+    (i: number) => {
+      if ((socket && roomInfo.isMyTurn) || handleSetStone(i)) {
+        audioPlay('audio/disable.mp3', volume);
+        return;
+      }
+      audioPlay('audio/switch.mp3', volume);
+      setIsMyTurn(true);
+    },
+    [roomInfo, socket, volume, setIsMyTurn, handleSetStone],
+  );
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('init', (msg: string) => {
+        const json: roomAns = JSON.parse(msg);
+        roomInit(json);
+        if (json.opponentPlayer) {
+          audioPlay('audio/bell_sound.mp3', volume);
+          setIsEnter(true);
+        }
+      });
+
+      socket.on('set', (msg: string) => {
+        const json = JSON.parse(msg);
+        console.log(json);
+        if (json.userId === roomInfo.userId) {
+          console.log('got return my emit!');
+          return;
+        }
+        handleMessage(json.col);
+      });
+
+      socket.on('start', () => {
+        audioPlay('audio/bell_sound.mp3', volume);
+        setIsEnter(true);
+      });
+    }
+  }, [handleMessage, roomInfo, roomInit, socket, volume]);
 
   const resetGame = () => {
     audioPlay('audio/switch.mp3', volume);
@@ -52,6 +111,8 @@ const Game = () => {
   };
 
   const current = history[stepNumber];
+  console.log(history);
+  console.log(stepNumber);
   const winStreak = calculateWinner(current, 0);
   const winner = winStreak ? current[winStreak[0]] : null;
 

@@ -96,17 +96,14 @@ const Game = () => {
       audioPlay('audio/switch.mp3', volume);
       squares[place] = xIsNext ? 'X' : 'O';
       const winnerStreak = calculateWinner(squares, 0);
-      const winner = winnerStreak ? squares[winnerStreak[0]] : null;
-      if (winnerStreak) {
-        for (let i = 0; i < squares.length; i++) {
-          const match = winnerStreak.includes(i);
-          squares[i] = match ? winner : null;
-        }
-      }
-      let newIsDraw = false;
-      if (!winnerStreak && stepNumber === 41) {
-        newIsDraw = true;
-      }
+      // const winner = winnerStreak ? squares[winnerStreak[0]] : null;
+      // if (winnerStreak) {
+      //   for (let i = 0; i < squares.length; i++) {
+      //     const match = winnerStreak.includes(i);
+      //     squares[i] = match ? winner : null;
+      //   }
+      // }
+      const newIsDraw = !winnerStreak && stepNumber === 41 ? ture : false;
       setIsDraw(newIsDraw);
       setHistory(
         newHistory.concat([

@@ -6,7 +6,7 @@ export function useStepNumber(): [number, boolean, () => void, (s: number) => vo
 
   const incStepNumber = () => {
     setStepNumber((stepNumber) => stepNumber + 1);
-    setXIsNext(!xIsNext);
+    setXIsNext((xIsNext) => !xIsNext);
   };
 
   const updateStepNumber = (step: number) => {
@@ -16,20 +16,3 @@ export function useStepNumber(): [number, boolean, () => void, (s: number) => vo
 
   return [stepNumber, xIsNext, incStepNumber, updateStepNumber];
 }
-
-// export function useGameState() {
-//   const [history, setHistory] = useState([
-//       Array(42).fill(null),
-//   ]);
-//   const [isDraw, setIsDraw] = useState(false);
-//   // winner
-//   const [winner, setWinner] = useState(null);
-//   // winnner streak
-//   const [winnerStreak, setWinnerStreak] = useState(null);
-
-//   const updateHistory(squares: Array<string>) => {
-//     const tmpHistory = history.slice(0, )
-//     setHistory()
-//   }
-
-// }
