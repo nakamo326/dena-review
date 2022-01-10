@@ -32,13 +32,14 @@ export function calculateWinner(squares: Array<string>, index: number): Array<nu
         (row + dirList[i][0] * 2) * 7 + (col + dirList[i][1] * 2),
         (row + dirList[i][0] * 3) * 7 + (col + dirList[i][1] * 3),
       ];
-      if (!isOverRun(i, line.slice(0, 2))) continue;
+      if (!isOverRun(i, line.slice(0, 3))) continue;
       const set = new Set(
         line.map((val) => {
           return squares[val];
         }),
       );
       if (set.size === 1) {
+        console.log(line);
         return line;
       }
     }
@@ -51,7 +52,6 @@ function isOverRun(dir: number, array: Array<number>) {
     const element = array[i];
     const row = Math.trunc(element / 7);
     const col = element % 7;
-
     if (
       (col === 0 && dir >= 3 && dir <= 5) ||
       (row === 0 && dir >= 1 && dir <= 3) ||
@@ -63,7 +63,7 @@ function isOverRun(dir: number, array: Array<number>) {
   return true;
 }
 
-export function makeWinSquares(squares: Array<string | null>, winStreak: number[] | null) {
+export function makeWinSquares(squares: Array<string | null>, winStreak: number[] | null): void {
   const winner = winStreak ? squares[winStreak[0]] : null;
   if (winStreak) {
     for (let i = 0; i < squares.length; i++) {
