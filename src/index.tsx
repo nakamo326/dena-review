@@ -25,10 +25,14 @@ const Game = () => {
       audioPlay('audio/disable.mp3', volume);
       return;
     }
-    audioPlay('audio/switch.mp3', volume);
     squares[place] = xIsNext ? 'X' : 'O';
     const winStreak = calculateWinner(squares, 0);
     makeWinSquares(squares, winStreak);
+    if (winStreak) {
+      audioPlay('audio/win.mp3', volume);
+    } else {
+      audioPlay('audio/switch.mp3', volume);
+    }
     newHistory.push(squares);
     const newIsDraw = !winStreak && stepNumber === 41 ? true : false;
     setIsDraw(newIsDraw);
